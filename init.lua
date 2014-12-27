@@ -15,11 +15,11 @@ rocks.veins = {}
 rocks.ores = {}
 
 rocks.layer_gain=40
-rocks.layer_scale=500
+rocks.layer_scale=300
 rocks.layer_presist=0.7
 rocks.layer_octaves=3
 
-rocks.rock_scale=3
+rocks.rock_scale=10
 rocks.rock_presist=0.5
 rocks.rock_octaves=1 -- faster than 2 ?
 
@@ -51,7 +51,7 @@ end
 -- test layer
 --
 
-rocks.register_layer("test",{ gain=10, height=100 })
+rocks.register_layer("test",{ gain=10, height=70 })
 rocks.register_rock("test","rocks:black_granite",1)
 rocks.register_rock("test","rocks:brown_granite",1)
 rocks.register_rock("test","rocks:pink_granite",1)
@@ -110,23 +110,25 @@ minetest.register_on_generated(function(minp, maxp, seed)
     if layer then
     -- noise for rocks
     rnoise=noise_rock:get3d( {x=x, y=y, z=z} )
+    rnoise=math.sin(rnoise*math.pi)
+    rnoise=(rnoise+1)*(layer.sum/2)
     if rnoise>maxrnoise then maxrnoise=rnoise end
     if rnoise<minrnoise then minrnoise=rnoise end
     -- noise is mainly -1+2, but sometimes may go further
-    rnoise=(rnoise+1)*(layer.sum/2)
     if rnoise<0 then rnoise=0 end
     if rnoise>layer.sum then rnoise=layer.sum end
     -- select current rock
     local rofs=0
+    local rockix=nil
     for rn,rd in pairs(layer.rocks) do
-     if (rnoise>=rofs) and (rnoise<rofs+rd.amount) then
+     if (rnoise>rofs) and (rnoise<=rofs+rd.amount) then
       rockix=rn
      end
      rofs=rofs+rd.amount
     end
     -- place rocks
      local p_pos = area:index(x, y, z)
-     if (nodes[p_pos]==stonectx)or true then
+     if rockix and ((nodes[p_pos]==stonectx)or true) then
       local cr=layer.rocks[rockix].block
       local ctx=layer.rocks[rockix].blockctx
       layer.rocks[rockix].placed=layer.rocks[rockix].placed+1
