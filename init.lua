@@ -349,22 +349,4 @@ minetest.register_ore({
 		noise_params = {offset=0, scale=15, spread={x=25, y=20, z=30}, seed=15, octaves=3, persist=0.10}
 })
 
-minetest.register_abm({
-        nodenames = {"default:stone"},
-        interval = 10,
-        chance = 1,
-        action = function(pos, node)
-                minetest.set_node(pos, {name="air"} )
-        end
-})
-
-minetest.register_abm({
-        nodenames = {"default:sand"},
-        interval = 10,
-        chance = 1,
-        action = function(pos, node)
-                minetest.set_node(pos, {name="air"} )
-        end
-})
-
 print("[rocks] loaded.")
