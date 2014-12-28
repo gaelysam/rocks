@@ -14,14 +14,9 @@ rocks.layers = {}
 rocks.veins = {}
 rocks.ores = {}
 
-rocks.layer_gain=40
 rocks.layer_scale=300
 rocks.layer_presist=0.7
 rocks.layer_octaves=3
-
-rocks.rock_scale=10
-rocks.rock_presist=0.5
-rocks.rock_octaves=1 -- faster than 2 ?
 
 rocks.register_layer=function(name,params)
  assert(name)
@@ -30,8 +25,8 @@ rocks.register_layer=function(name,params)
  assert(params.height)
  local maxheight
  for ln,ld in pairs(rocks.layers) do
-  if (not ld.maxheight) or (ld.maxheight>params.height) then ld.maxheight=params.height end
-  if (not maxheight) or (maxheight>ld.height) then maxheight=ld.height end
+  if (ld.height<params.height)and ((not ld.maxheight) or (ld.maxheight>params.height)) then ld.maxheight=params.height end
+  if (ld.height>params.height)and((not maxheight) or (maxheight>ld.height)) then maxheight=ld.height end
  end
  rocks.layers[name]= {
   gain=params.gain,
@@ -50,7 +45,7 @@ rocks.register_rock=function(layer,block,amount)
  assert(block)
  assert(amount)
  assert(rocks.layers[layer])
- table.insert(rocks.layers[layer].rocks, { block=block, amount=amount, placed=0})
+ table.insert(rocks.layers[layer].rocks, { block=block, amount=amount})
  rocks.layers[layer].sum=rocks.layers[layer].sum+amount
  print("[rocks] register rock "..block.." in "..layer.." amount="..amount.." cur sum="..rocks.layers[layer].sum)
 end
@@ -59,11 +54,22 @@ end
 -- test layer
 --
 
-rocks.register_layer("test",{ gain=40, height=70, limit=2, seed=1 })
-rocks.register_rock("test","rocks:black_granite",1)
-rocks.register_rock("test","rocks:brown_granite",1)
-rocks.register_rock("test","rocks:pink_granite",1)
-rocks.register_rock("test","rocks:white_granite",1)
+rocks.register_layer("test1",{ gain=40, height=70, limit=2, seed=1 })
+rocks.register_rock("test1","rocks:black_granite",1)
+rocks.register_rock("test1","air",1)
+rocks.register_layer("test2",{ gain=5, height=70, limit=2, seed=5 })
+rocks.register_rock("test2","default:stone_with_coal",1)
+rocks.register_layer("test3",{ gain=40, height=65, limit=2, seed=3 })
+rocks.register_rock("test3","rocks:pink_granite",1)
+rocks.register_rock("test3","air",1)
+rocks.register_layer("test4",{ gain=40, height=90, limit=2, seed=4 })
+rocks.register_rock("test4","rocks:white_granite",1)
+rocks.register_rock("test4","air",1)
+
+
+for ln,ld in pairs(rocks.layers) do
+ print("[rocks] debug: "..ln..": "..minetest.serialize(ld))
+end
 
 --
 -- layer generator
@@ -73,13 +79,15 @@ local function mkheightmap(x,z,miny,maxy)
  local hm={}
  for ln,ld in pairs(rocks.layers) do
   if not ld.noise then
-   ld.noise=minetest.get_perlin(ld.seed, rocks.rock_octaves, rocks.rock_presist, rocks.rock_scale)
+   print("[rocks] initialize perlin noise for layer "..ln)
+   ld.noise=minetest.get_perlin(ld.seed, rocks.layer_octaves, rocks.layer_presist, rocks.layer_scale)
   end
   if (ld.height-ld.gain<maxy)and((not ld.maxheight)or(ld.maxheight+ld.gain>miny)) then
    local noise=ld.noise:get2d({x=x,y=z})
    if math.abs(noise)<ld.limit then
-    ld.nh = (ld.noise:get2d({x=x,y=z})*ld.gain)+ld.height
-    if ld.nh<maxy then table.insert(hm,ld) end
+    ld.nh = (noise*ld.gain)+ld.height
+    -- if (ld.nh<maxy)and(ld.nh>miny)
+    table.insert(hm,ld)
    end
   end
  end
@@ -94,11 +102,11 @@ minetest.register_on_generated(function(minp, maxp, seed)
  -- 3 octaves it is like 1.7 max
  -- 4 octaves with 0.8 presist = 2.125 max !!
  -- if ...
- print("[rocks] generate y="..minp.y)
  local timebefore=os.clock();
  local manipulator, emin, emax = minetest.get_mapgen_object("voxelmanip")
  local nodes = manipulator:get_data()
  local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
+ if (minp.x>0)and(minp.x<200) then return end -- debug
  for x=minp.x,maxp.x,1 do
   for z=minp.z,maxp.z,1 do
    --initialize layers hmap
@@ -108,7 +116,10 @@ minetest.register_on_generated(function(minp, maxp, seed)
     -- select layer
     local layer
     for ln,ld in pairs(layers) do
-     if (y>ld.nd)and ((not layer)or(ld.nd<layer.nd)) then
+     if (ld)and
+        (ld.nh<y)and
+        ((not layer)or(ld.height>layer.height))
+     then
       layer=ld
      end
     end
@@ -125,12 +136,11 @@ minetest.register_on_generated(function(minp, maxp, seed)
    end end
   end
  end
- print("[rocks] manipulator flush")
  manipulator:set_data(nodes)
  -- manipulator:calc_lighting()
  -- manipulator:update_liquids()
  manipulator:write_to_map()
- print("[rocks] gen "..os.difftime(os.clock(),timebefore))
+ print("[rocks] gen "..os.clock()-timebefore)
  
 end)
 
