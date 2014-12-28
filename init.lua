@@ -75,7 +75,7 @@ end
 -- layer generator
 --
 
-local function mkheightmap(x,z,miny,maxy)
+local function mkheightmap(layers,x,z,miny,maxy)
  local hm={}
  for ln,ld in pairs(rocks.layers) do
   if not ld.noise then
@@ -106,13 +106,15 @@ minetest.register_on_generated(function(minp, maxp, seed)
  local manipulator, emin, emax = minetest.get_mapgen_object("voxelmanip")
  local nodes = manipulator:get_data()
  local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
- if (minp.x>0)and(minp.x<200) then return end -- debug
+ -- initialize noises and sort out unused layers
+ local avllayers=rocks.layers -- impl mknoises(rocks.layers,minp,maxp)
+ --
  for x=minp.x,maxp.x,1 do
   for z=minp.z,maxp.z,1 do
    --initialize layers hmap
-   local layers=mkheightmap(x,z,minp.y,maxp.y)
-   if layers then
-   for y=minp.y,maxp.y,1 do
+   local layers=mkheightmap(avllayers,x,z,minp.y,maxp.y)
+   if (minp.x>0)and(minp.x<200) then layers=nil end --< debug
+   if layers then for y=minp.y,maxp.y,1 do
     -- select layer
     local layer
     for ln,ld in pairs(layers) do
@@ -123,10 +125,18 @@ minetest.register_on_generated(function(minp, maxp, seed)
       layer=ld
      end
     end
+    -- select vein
+    if layer then
+     -- layer=todo... iterate vein's noises and select one above it's treshold
+    end
     -- select rock
+    local rock=nil
     if layer then
      rock=layer.rocks[1] -- todo...
-     -- place rocks
+          --> based on pseudorandom, no pattern, just random
+    end
+    -- place rocks
+    if rock then
      if not rock.ctx then
       rock.ctx=minetest.get_content_id(rock.block)
      end
