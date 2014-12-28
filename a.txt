@@ -13,7 +13,7 @@ Features
 
 ** Work in progress! **
 
-* Git clone: [http](.git)
+* Git clone: [https](https://gitorious.org/mt/rocks.git)
 
 Screenshots
 -----------
