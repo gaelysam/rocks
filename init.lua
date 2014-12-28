@@ -28,9 +28,17 @@ rocks.register_layer=function(name,params)
  assert(params)
  assert(params.gain)
  assert(params.height)
+ local maxheight
+ for ln,ld in pairs(rocks.layers) do
+  if (not ld.maxheight) or (ld.maxheight>params.height) then ld.maxheight=params.height end
+  if (not maxheight) or (maxheight>ld.height) then maxheight=ld.height end
+ end
  rocks.layers[name]= {
   gain=params.gain,
   height=params.height,
+  maxheight=maxheight,
+  limit=params.limit,
+  seed=params.seed,
   sum=0,
   rocks={}
  }
@@ -51,7 +59,7 @@ end
 -- test layer
 --
 
-rocks.register_layer("test",{ gain=10, height=70 })
+rocks.register_layer("test",{ gain=40, height=70, limit=2, seed=1 })
 rocks.register_rock("test","rocks:black_granite",1)
 rocks.register_rock("test","rocks:brown_granite",1)
 rocks.register_rock("test","rocks:pink_granite",1)
@@ -61,19 +69,26 @@ rocks.register_rock("test","rocks:white_granite",1)
 -- layer generator
 --
 
-local noise_layer=nil
-local noise_rock=nil
-local noise_vein=nil
-local noise_ore=nil
-local stonectx=nil
-
-local function get_layer(y,noise)
- return bln
+local function mkheightmap(x,z,miny,maxy)
+ local hm={}
+ for ln,ld in pairs(rocks.layers) do
+  if not ld.noise then
+   ld.noise=minetest.get_perlin(ld.seed, rocks.rock_octaves, rocks.rock_presist, rocks.rock_scale)
+  end
+  if (ld.height-ld.gain<maxy)and((not ld.maxheight)or(ld.maxheight+ld.gain>miny)) then
+   local noise=ld.noise:get2d({x=x,y=z})
+   if math.abs(noise)<ld.limit then
+    ld.nh = (ld.noise:get2d({x=x,y=z})*ld.gain)+ld.height
+    if ld.nh<maxy then table.insert(hm,ld) end
+   end
+  end
+ end
+ return hm
 end
 
+local stonectx=nil
+
 minetest.register_on_generated(function(minp, maxp, seed)
- if noise_layer==nil then noise_layer=minetest.get_perlin(353, rocks.layer_octaves, rocks.layer_presist, rocks.layer_scale) end
- if noise_rock==nil then noise_rock=minetest.get_perlin(354, rocks.rock_octaves, rocks.rock_presist, rocks.rock_scale) end
  if not stonectx then stonectx= minetest.get_content_id("default:stone") end
  -- noise values range (-1;+1) (1 octave)
  -- 3 octaves it is like 1.7 max
@@ -84,62 +99,30 @@ minetest.register_on_generated(function(minp, maxp, seed)
  local manipulator, emin, emax = minetest.get_mapgen_object("voxelmanip")
  local nodes = manipulator:get_data()
  local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
- local maxrnoise=-500
- local minrnoise=500
- local perlin=nil
  for x=minp.x,maxp.x,1 do
   for z=minp.z,maxp.z,1 do
-   perlin=noise_layer:get2d( {x=x, y=z} )
-   noise=perlin*rocks.layer_gain
-   local curlh=-31000 -- top height of current layer
-   local curln=nil -- name of current layer
-   local layer=nil
+   --initialize layers hmap
+   local layers=mkheightmap(x,z,minp.y,maxp.y)
+   if layers then
    for y=minp.y,maxp.y,1 do
-    -- select current layer
-    if (not layer)or((y+noise)>curlh) then
-     curlh=-31000
-     curln=nil
-     for ln,ld in pairs(rocks.layers) do
-      if (ld.height>curlh)and(y+noise>ld.height) then
-       curln=ln
-       curlh=ld.height
-      end
+    -- select layer
+    local layer
+    for ln,ld in pairs(layers) do
+     if (y>ld.nd)and ((not layer)or(ld.nd<layer.nd)) then
+      layer=ld
      end
-     layer=rocks.layers[curln]
     end
+    -- select rock
     if layer then
-    -- noise for rocks
-    rnoise=noise_rock:get3d( {x=x, y=y, z=z} )
-    rnoise=math.sin(rnoise*math.pi)
-    rnoise=(rnoise+1)*(layer.sum/2)
-    if rnoise>maxrnoise then maxrnoise=rnoise end
-    if rnoise<minrnoise then minrnoise=rnoise end
-    -- noise is mainly -1+2, but sometimes may go further
-    if rnoise<0 then rnoise=0 end
-    if rnoise>layer.sum then rnoise=layer.sum end
-    -- select current rock
-    local rofs=0
-    local rockix=nil
-    for rn,rd in pairs(layer.rocks) do
-     if (rnoise>rofs) and (rnoise<=rofs+rd.amount) then
-      rockix=rn
+     rock=layer.rocks[1] -- todo...
+     -- place rocks
+     if not rock.ctx then
+      rock.ctx=minetest.get_content_id(rock.block)
      end
-     rofs=rofs+rd.amount
-    end
-    -- place rocks
      local p_pos = area:index(x, y, z)
-     if rockix and ((nodes[p_pos]==stonectx)or true) then
-      local cr=layer.rocks[rockix].block
-      local ctx=layer.rocks[rockix].blockctx
-      layer.rocks[rockix].placed=layer.rocks[rockix].placed+1
-      if not ctx then
-       ctx= minetest.get_content_id(cr)
-       layer.rocks[rockix].blockctx= ctx
-      end
-      nodes[p_pos] = ctx
-     end
+     nodes[p_pos] = rock.ctx
     end
-   end
+   end end
   end
  end
  print("[rocks] manipulator flush")
@@ -147,7 +130,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
  -- manipulator:calc_lighting()
  -- manipulator:update_liquids()
  manipulator:write_to_map()
- print("[rocks] gen "..os.difftime(os.clock(),timebefore).." perlin: "..minrnoise..".."..maxrnoise)
+ print("[rocks] gen "..os.difftime(os.clock(),timebefore))
  
 end)
 
