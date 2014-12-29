@@ -8,7 +8,7 @@ if (minetest.get_modpath("intllib")) then
 	S = function ( s ) return s end
 end
 
-local modpath=minetest.get_modpath(minetest.get_current_modname()))
+local modpath=minetest.get_modpath(minetest.get_current_modname())
 
 dofile(modpath.."/register.lua")
 
@@ -25,36 +25,36 @@ rocks.noiseparams_layers = {
 -- test layer
 --
 
-rocks.register_layer("test1",{ gain=40, height=70, limit=2, seed=1 },"rocks:black_granite")
+rocks.register_layer("test1",{ gain=40, height=70, limit=2, seed=1 }, "air") --"rocks:black_granite")
 
 -- uhlie ako vrstva je kokotina.
 
-rocks.register_layer("test3",{ gain=40, height=65, limit=2, seed=3 },"rocks:pink_granite")
+rocks.register_layer("test3",{ gain=40, height=65, limit=2, seed=3 },"air") --"rocks:pink_granite")
 
-rocks.register_layer("test4",{ gain=40, height=90, limit=2, seed=4 },"rocks:white_granite")
+rocks.register_layer("test4",{ gain=40, height=90, limit=2, seed=4 },"air") --"rocks:white_granite")
 
 --
 -- test vein
 --
 
 rocks.register_vein("testvein1",{
-        spread = {x=5, y=90, z=5}, -- tall, narrow
+        spread = {x=15, y=15, z=15}, -- tall, narrow
                                    -- larger values -> larger and less frequent vein
-        treshold=0.5, -- betveen -2 and +2, mapgen will use this or per-ore treshold if it is larger
+        treshold=0.8, -- betveen -2 and +2, mapgen will use this or per-ore treshold if it is larger
                       -- 2 never generate
                       -- 1 extremly rare
                       -- 0 50% chance
                       -- less than 0 = SPAM
         seed = 9, -- random seed
-        hmin=65, -- set to nil to generate everywhere
-        hmax=90,
+        hmin=5, -- set to nil to generate everywhere
+        hmax=100,
         layers={ "test3" }, -- only occur in layers
 })
-rocks.register_ore( "testvein1", "default:dirt"       , {treshold=0,    chance=1  } )
+rocks.register_ore( "testvein1", "default:glass"       , {treshold=0,    chance=1  } )
   -- treshold=0 chance=1 ... generate everywhere
 rocks.register_ore( "testvein1", "default:wood"       , {treshold=0,    chance=0.2} )
   -- chance<1 ... vein contains chance*100% of the material, evenly randomly distributed
-rocks.register_ore( "testvein1", "default:lava_source", {treshold=0.8,  chance=1  } )
+rocks.register_ore( "testvein1", "default:tree", {treshold=0.87,  chance=1  } )
   -- treshold>0 ... generate in the center, larger value -> narrower
  -- 20% wood, lava in center, dirt the rest
  -- ore with smallest chance and highest treshold is selected
