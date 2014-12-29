@@ -4,6 +4,8 @@ Geological layer generator for [Minetest] "rocks"
 Aim of this mod is to replace all generic stone (default:stone) and 
 generate underground layers of different rocks.
 
+Currently everithing generated above ground, in air. This is for debugging.
+
 Features
 --------
 
