@@ -24,3 +24,87 @@ Screenshots
 * Coal pane: ![large coal deposit](coal-pane0.png)
 * Vein: ![sample of generated vein](vein0.png)
 
+Documentation
+-------------
+
+How the underground is generated: *todo*.
+
+Underground is divided into horizontal layers. Bottom of each layer is at 
+fixed height and moved up or down by 2d perlin noise.
+
+In every layer there can be multiple veins. Veins are blob-shaped volumes 
+of different rocks. Borders of vein are defined by 3d perlin noise. Veins 
+often contain ores.
+
+In every vein, ores are distributed randomly. Some ores 
+may occur in specific areas of the vein (where noise is higher than 
+treshold) or distributed randomly in specific amount (chance based on 
+pseudorandom number) or combination of both.
+
+There is 1 2d perlin noise per layer, 1 3d perlin noise per vein and 1 
+pseudorandom number generator per ore.
+
+Modding Interface
+-----------------
+
+"Rocks" exposes api to add new ores, veins and layers. The api is defined 
+in [register](register.lua).
+
+### Register layer
+
+	rocks.register_layer=function(name,params,rock)
+
+
+This function registers a layer. Layer is identified by unique string name. 
+Location of layer is specified in params and node, the layer should be 
+composed of is defined by rock.
+
+Field "params.gain" sets how height of the layer should vary. Field 
+"params.height" sets height of bottom of the layer. Field "params.limit" is 
+value of noise above which the layer is not generated. Set to 2 to disable 
+this feature. Last field "params.seed" is offset to world seed to seed the 
+noise.
+
+### Register vein
+
+	rocks.register_vein=function(name,params)
+
+This function registers a vein with name "name" to be generated according 
+to params.
+
+Field "params.spread" {x,y,z} defines how the vein should look like. X 
+shoudd be equal to z. If y=x=z then the vein is equal in all directions. To 
+make the vein taller, set y to higher value. Larger values make larger and 
+less frequent veins.
+
+Field "params.treshold" specifies rarity of the vein. It should be betveen 
+-2 and +2, mapgen will use this or per-ore treshold if per-ore treshold is 
+larger.
+
+- 2 never generate
+- 1 extremly rare
+- 0 50% chance
+- less than 0 = SPAM
+
+Field "params.seed" is added to world seed to form seed for noise function.
+
+Depths, where the wein should generate can be controlled by fields hmin and 
+hmax. They can be set to nil to generate everywhere.
+
+Layers, where the vein should generate in must be listed in Field 
+"params.layer".
+
+## Register ore
+
+	rocks.register_ore=function( vein, node, params )
+
+This function registers ore or rock to be generated in vein "vein". Node to 
+be generated is "node". Params specify parameters, where the rock should 
+spawn.
+
+If noise is larger than Params.treshold, the ore is spawned (set to 2 to 
+spawn everywhere in the vein, 0.8=only in middle). Params.chance specify 
+the chance (/100%) of ore being spawned (0=never 1=always 0.5=50%).
+
+If multiple ores pass the treshhold and chance tests, ore with highest 
+treshold and smallest chance is spawned.
