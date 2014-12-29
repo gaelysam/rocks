@@ -41,17 +41,40 @@ rocks.register_layer=function(name,params,rock)
   rock={ block=rock },
   veins={}
  }
- print("[rocks] register layer "..name)
+ print("[rocks] layer "..name)
 end
 
-rocks.register_rock=function(layer,block,amount)
- assert(layer)
- assert(block)
- assert(amount)
- assert(rocks.layers[layer])
- table.insert(rocks.layers[layer].rocks, { block=block, amount=amount})
- rocks.layers[layer].sum=rocks.layers[layer].sum+amount
- print("[rocks] register rock "..block.." in "..layer.." amount="..amount.." cur sum="..rocks.layers[layer].sum)
+rocks.register_vein=function(name,params)
+ assert(name)
+ assert(params)
+ assert(not rocks.veins[name])
+ rocks.veins[name]={
+  np={
+   offset=0, scale=1, octaves=1, presist=0.8,
+   spread=params.spread, seed=params.seed
+  },
+  treshold=params.treshold,
+  hmin=params.hmin, hmax=params.hmax,
+  layers=params.layers,
+  ores={}
+ }
+ for ln,ld in pairs(rocks.layers) do
+  ld.veins[name]=rocks.veins[name]
+ end
+ print("[rocks] vein "..name)
+end
+
+rocks.register_ore=function( vein, node, params )
+ -- params= {treshold=0,    chance=1  }
+ ore={ node=node }
+ if params.treshold and (params.treshold>rocks.veins[vein].treshold) then
+  ore.treshold=params.treshold
+ end
+ if params.chance and (params.chance<1) then
+  ore.chance=params.chance
+ end
+ table.insert(rocks.veins[vein].ores, ore)
+ print("[rocks] ore "..node.." in "..vein.." chance="..(ore.chance or "1").." treshold="..(ore.treshold or rocks.veins[vein].treshold))
 end
 
 --
@@ -66,9 +89,35 @@ rocks.register_layer("test3",{ gain=40, height=65, limit=2, seed=3 },"rocks:pink
 
 rocks.register_layer("test4",{ gain=40, height=90, limit=2, seed=4 },"rocks:white_granite")
 
+--
+-- test vein
+--
+
+rocks.register_vein("testvein1",{
+        spread = {x=5, y=90, z=5}, -- tall, narrow
+                                   -- larger values -> larger and less frequent vein
+        treshold=0.5, -- betveen -2 and +2, mapgen will use this or per-ore treshold if it is larger
+                      -- 2 never generate
+                      -- 1 extremly rare
+                      -- 0 50% chance
+                      -- less than 0 = SPAM
+        seed = 9, -- random seed
+        hmin=65, -- set to nil to generate everywhere
+        hmax=90,
+        layers={ "test3" }, -- only occur in layers
+})
+rocks.register_ore( "testvein1", "default:dirt"       , {treshold=0,    chance=1  } )
+  -- treshold=0 chance=1 ... generate everywhere
+rocks.register_ore( "testvein1", "default:wood"       , {treshold=0,    chance=0.2} )
+  -- chance<1 ... vein contains chance*100% of the material, evenly randomly distributed
+rocks.register_ore( "testvein1", "default:lava_source", {treshold=0.8,  chance=1  } )
+  -- treshold>0 ... generate in the center, larger value -> narrower
+ -- 20% wood, lava in center, dirt the rest
+ -- ore with smallest chance and highest treshold is selected
+
 
 for ln,ld in pairs(rocks.layers) do
- print("[rocks] debug: "..ln..": "..minetest.serialize(ld))
+ -- print("[rocks] debug: "..ln..": "..minetest.serialize(ld))
 end
 
 --
@@ -168,19 +217,6 @@ minetest.register_on_generated(function(minp, maxp, seed)
  print("[rocks] gen "..os.clock()-timebefore)
  
 end)
-
-minetest.register_on_shutdown( 
-    function(playername, param)
-     for layername,layer in pairs(rocks.layers) do
-      for rockix,rock in pairs(layer.rocks) do
-      print("[rock] stats"..minetest.serialize( {
-        layer=layername,
-        rock=rock
-      }))
-      end
-     end
-    end
-  )
 
 --
 --Bedrock
@@ -356,7 +392,7 @@ minetest.register_ore({
 
 minetest.register_ore({
 		ore_type       = "sheet",
-		ore            = "rocks:clay",
+		ore            = "default:clay",
 		wherein        = "do_not_generate",
 		clust_scarcity = 1,
 		clust_num_ores = 1,
