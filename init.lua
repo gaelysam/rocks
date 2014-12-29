@@ -14,11 +14,15 @@ rocks.layers = {}
 rocks.veins = {}
 rocks.ores = {}
 
-rocks.layer_scale=300
-rocks.layer_presist=0.7
-rocks.layer_octaves=3
+rocks.noiseparams_layers = {
+        offset = 0,
+        scale = 1,
+        spread = {x=300, y=300, z=300},
+        octaves = 3,
+        persist = 0.63
+}
 
-rocks.register_layer=function(name,params)
+rocks.register_layer=function(name,params,rock)
  assert(name)
  assert(params)
  assert(params.gain)
@@ -34,8 +38,8 @@ rocks.register_layer=function(name,params)
   maxheight=maxheight,
   limit=params.limit,
   seed=params.seed,
-  sum=0,
-  rocks={}
+  rock={ block=rock },
+  veins={}
  }
  print("[rocks] register layer "..name)
 end
@@ -54,17 +58,13 @@ end
 -- test layer
 --
 
-rocks.register_layer("test1",{ gain=40, height=70, limit=2, seed=1 })
-rocks.register_rock("test1","rocks:black_granite",1)
-rocks.register_rock("test1","air",1)
-rocks.register_layer("test2",{ gain=5, height=70, limit=2, seed=5 })
-rocks.register_rock("test2","default:stone_with_coal",1)
-rocks.register_layer("test3",{ gain=40, height=65, limit=2, seed=3 })
-rocks.register_rock("test3","rocks:pink_granite",1)
-rocks.register_rock("test3","air",1)
-rocks.register_layer("test4",{ gain=40, height=90, limit=2, seed=4 })
-rocks.register_rock("test4","rocks:white_granite",1)
-rocks.register_rock("test4","air",1)
+rocks.register_layer("test1",{ gain=40, height=70, limit=2, seed=1 },"rocks:black_granite")
+
+-- uhlie ako vrstva je kokotina.
+
+rocks.register_layer("test3",{ gain=40, height=65, limit=2, seed=3 },"rocks:pink_granite")
+
+rocks.register_layer("test4",{ gain=40, height=90, limit=2, seed=4 },"rocks:white_granite")
 
 
 for ln,ld in pairs(rocks.layers) do
@@ -75,21 +75,29 @@ end
 -- layer generator
 --
 
-local function mkheightmap(layers,x,z,miny,maxy)
- local hm={}
+local function mknoises(layers,minp,maxp)
+ local nm={}
  for ln,ld in pairs(rocks.layers) do
-  if not ld.noise then
-   print("[rocks] initialize perlin noise for layer "..ln)
-   ld.noise=minetest.get_perlin(ld.seed, rocks.layer_octaves, rocks.layer_presist, rocks.layer_scale)
+  if (ld.height-ld.gain<maxp.y)and((not ld.maxheight)or(ld.maxheight+ld.gain>minp.y)) then
+   local np=rocks.noiseparams_layers
+   np.seed=ld.seed
+   local side_length = maxp.x - minp.x + 1
+   ld.nmap=minetest.get_perlin_map(np,{x=side_length, y=side_length, z=side_length}):get2dMap({x=minp.x, y=minp.z})
+   table.insert(nm,ld)
   end
-  if (ld.height-ld.gain<maxy)and((not ld.maxheight)or(ld.maxheight+ld.gain>miny)) then
-   local noise=ld.noise:get2d({x=x,y=z})
+ end
+ return nm
+end
+
+local function mkheightmap(layers,x,z,minp,maxp)
+ local hm={}
+ for ln,ld in pairs(layers) do
+   local noise=ld.nmap[z-minp.z+1][x-minp.x+1]
    if math.abs(noise)<ld.limit then
     ld.nh = (noise*ld.gain)+ld.height
     -- if (ld.nh<maxy)and(ld.nh>miny)
     table.insert(hm,ld)
    end
-  end
  end
  return hm
 end
@@ -107,15 +115,16 @@ minetest.register_on_generated(function(minp, maxp, seed)
  local nodes = manipulator:get_data()
  local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
  -- initialize noises and sort out unused layers
- local avllayers=rocks.layers -- impl mknoises(rocks.layers,minp,maxp)
+ local availlayers=mknoises(rocks.layers,minp,maxp)
  --
  for x=minp.x,maxp.x,1 do
   for z=minp.z,maxp.z,1 do
-   --initialize layers hmap
-   local layers=mkheightmap(avllayers,x,z,minp.y,maxp.y)
+   --* initialize layers hmap
+   local layers=mkheightmap(availlayers,x,z,minp,maxp)
    if (minp.x>0)and(minp.x<200) then layers=nil end --< debug
    if layers then for y=minp.y,maxp.y,1 do
-    -- select layer
+    
+    --* select layer
     local layer
     for ln,ld in pairs(layers) do
      if (ld)and
@@ -125,17 +134,22 @@ minetest.register_on_generated(function(minp, maxp, seed)
       layer=ld
      end
     end
-    -- select vein
+    
+    --* select vein
+    local vein=nil
     if layer then
-     -- layer=todo... iterate vein's noises and select one above it's treshold
+     -- vein=todo... iterate vein's noises and select one above it's treshold
     end
-    -- select rock
+    
+    --* select rock
     local rock=nil
-    if layer then
-     rock=layer.rocks[1] -- todo...
-          --> based on pseudorandom, no pattern, just random
+    if vein then
+     rock=nil -- todo... --> based on pseudorandom, no pattern, just random
+    elseif layer then
+     rock=layer.rock -- not in vein > select base rock
     end
-    -- place rocks
+    
+    --* place rocks
     if rock then
      if not rock.ctx then
       rock.ctx=minetest.get_content_id(rock.block)
@@ -143,6 +157,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
      local p_pos = area:index(x, y, z)
      nodes[p_pos] = rock.ctx
     end
+    
    end end
   end
  end
