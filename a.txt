@@ -20,4 +20,5 @@ Screenshots
 
 * Layers: ![sample of layers](layers0.png)
 * Coal pane: ![large coal deposit](coal-pane0.png)
+* Vein: ![sample of generated vein](vein0.png)
 
