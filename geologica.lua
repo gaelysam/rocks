@@ -14,7 +14,7 @@ minetest.register_node( "rocks:granite", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 	groups = {cracky=CcStrong, stone=1}, 
 })
-rocks.register_layer( "granite",{ gain=20, height=-40, limit=2, seed=1 }, "rocks:granite")
+rocks.register_layer( "granite",{ gain=20, height=-45, limit=2, seed=1 }, "rocks:granite")
 
 -- Diorite      In/Inter   vhard Below granite                      
 minetest.register_node( "rocks:diorite", {  
@@ -64,7 +64,7 @@ minetest.register_node( "rocks:mudstone", {
 	groups = {cracky=CcSoft, stone=1}, 
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
-rocks.register_layer( "mudstone",{ gain=20, height=-5, limit=2, seed=4 }, "rocks:mudstone")
+rocks.register_layer( "mudstone",{ gain=6, height=-10, limit=2, seed=4 }, "rocks:mudstone")
 
 -- Slate        MM/barro   med   Under mud/clay/siltstone
 -- Schist       MM/barro   med   Under slate, sometimes igneous
