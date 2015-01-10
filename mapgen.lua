@@ -27,7 +27,7 @@ local function mkheightmap(layers,x,z,minp,maxp)
  local hm={}
  for ln,ld in pairs(layers) do
    local noise=ld.nmap[z-minp.z+1][x-minp.x+1]
-   if math.abs(noise)<ld.limit then
+   if noise<ld.limit then
     ld.nh = (noise*ld.gain)+ld.height
     -- if (ld.nh<maxy)and(ld.nh>miny)
     table.insert(hm,ld)
@@ -39,7 +39,7 @@ end
 local stonectx=nil
 
 minetest.register_on_generated(function(minp, maxp, seed)
- if not stone_ctx then stone_ctx= minetest.get_content_id("air") end
+ if not stone_ctx then stone_ctx= minetest.get_content_id("default:stone") end
  -- noise values range (-1;+1) (1 octave)
  -- 3 octaves it is like 1.7 max
  -- 4 octaves with 0.8 presist = 2.125 max !!
@@ -112,6 +112,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
       rock.ctx=minetest.get_content_id(rock.node)
      end
      nodes[p_pos] = rock.ctx
+     -- if minp.x>0 then nodes[p_pos]=0 end
     end
    
     perlin_index =perlin_index+1
