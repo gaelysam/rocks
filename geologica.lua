@@ -95,7 +95,7 @@ rocks.register_layer( "schist",{ gain=10, height=-18, limit=2, seed=5 }, "rocks:
 -- Gneiss       MM/barro   hard  Under schist, sometimes igneous
 minetest.register_node( "rocks:gneiss", {  
 	description = S("gneiss"),
-	tiles = { "rocks_gneiss.png" },
+	tiles = { "rocks_Gneiss.png" },
 	groups = {cracky=CcStrong, stone=1}, 
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
