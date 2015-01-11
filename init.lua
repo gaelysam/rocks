@@ -14,9 +14,9 @@ dofile(modpath.."/register.lua")
 rocks.noiseparams_layers = {
         offset = 0,
         scale = 1,
-        spread = {x=300, y=300, z=300},
-        octaves = 3,
-        persist = 0.63
+        spread = {x=80, y=80, z=80},
+        octaves = 2,
+        persist = 0.7
 }
 
 dofile(modpath.."/mapgen.lua")
