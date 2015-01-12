@@ -53,6 +53,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
  local availlayers=mknoises(rocks.layers,minp,maxp,seed)
  local perlin_index = 1
  --
+ print("[rocks] afterinit "..os.clock()-timebefore)
  for x=minp.x,maxp.x,1 do
   for z=minp.z,maxp.z,1 do
    --* initialize layers hmap

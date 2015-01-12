@@ -21,6 +21,7 @@ rocks.noiseparams_layers = {
 
 dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/geologica.lua")
+dofile(modpath.."/geologica_nv.lua")
 
 
 print("[rocks] loaded.")
