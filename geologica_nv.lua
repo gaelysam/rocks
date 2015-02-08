@@ -15,8 +15,8 @@ rocks.register_vein("clay",{
         hmin=-8, hmax=nil,
         layers={ "mudstone" },
 })
-rocks.register_ore( "clay", "default:clay", {treshold=0, chance=1 } )
-rocks.register_ore( "clay", "default:torch", {treshold=0, chance=0.3 } )
+rocks.register_ore( "clay", "default:clay", {treshold=0, chance=85 } )
+rocks.register_ore( "clay", "default:torch", {treshold=0, chance=15 } )
 
 -- Breccia      Mixture    soft  in mudstone
 -- Conglomerate Sed        soft  in mudstone

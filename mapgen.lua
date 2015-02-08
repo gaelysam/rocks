@@ -37,7 +37,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
     -- noise pre vein
     np=vd.np
     vd.nmap=minetest.get_perlin_map(np,map_lengths_xyz):get3dMap_flat(minp)
-    vd.prng=nil
+    vd.prng=PseudoRandom(np.seed)
     vd.sum=0
     for i,ore in pairs(vd.ores) do
      -- contntid pre rudu
@@ -93,9 +93,13 @@ minetest.register_on_generated(function(minp, maxp, seed)
     
     if vein then
      --* select ore
+     local chance=vein.prng:next(0,vein.sum)
      for i,ore in pairs(vein.ores) do
-      rock=ore
-      break
+      chance=chance-ore.chance
+      if chance<=0 then
+       rock=ore
+       break
+      end
      end
     end
     
@@ -111,8 +115,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
   end
  end
  manipulator:set_data(nodes)
- manipulator:calc_lighting()
- manipulator:update_liquids()
+ --manipulator:calc_lighting()
+ --manipulator:set_lighting({day=15,night=15})
+ --manipulator:update_liquids()
  manipulator:write_to_map()
  print("[rocks] gen0 "..os.clock()-timebefore)
 end)
