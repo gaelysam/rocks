@@ -9,8 +9,8 @@ local CcSoft=3
 
 -- Claystone    Sed        soft  in mudstone
 rocks.register_vein("clay",{
-        spread = {x=10, y=10, z=10},
-        treshold=0.75,
+        spread = {x=30, y=10, z=30},
+        treshold=0.2, -- clay should be plenty
         seed = 9,
         hmin=-8, hmax=nil,
         layers={ "mudstone" },

@@ -27,7 +27,26 @@ minetest.register_on_generated(function(minp, maxp, seed)
    d.nmap=minetest.get_perlin_map(np,map_lengths_xyz):get2dMap_flat({x=minp.x, y=minp.z})
    -- contene_id kamenov
    d.rock.ctx=d.rock.ctx or minetest.get_content_id(d.rock.node)
-   table.insert(avl,d) -- pridame ju
+   -- veiny
+   local veinstodo={}
+   for veinname,vd in pairs(d.veins) do
+    -- todo: do not generate noise for blocks outside the layer
+    veinstodo[veinname]=vd
+   end
+   for veinname,vd in pairs(veinstodo) do
+    -- noise pre vein
+    np=vd.np
+    vd.nmap=minetest.get_perlin_map(np,map_lengths_xyz):get3dMap_flat(minp)
+    vd.prng=nil
+    vd.sum=0
+    for i,ore in pairs(vd.ores) do
+     -- contntid pre rudu
+     ore.ctx=ore.ctx or minetest.get_content_id(ore.node)
+     -- sum sanci pre vein
+     vd.sum=vd.sum+ore.chance
+    end
+   end
+   table.insert(avl,d) -- pridame vrstvu
    if (d.height-d.gain)>maxp.y then break end -- ak je mimo zhora tak uz dalsie nehladaj
   else
    --print(" no higher "..d.height.." than "..minp.y)
@@ -35,25 +54,47 @@ minetest.register_on_generated(function(minp, maxp, seed)
  end
 
  --
- print("[rocks] afterinit "..os.clock()-timebefore.." #layers="..#avl)
+ print("[rocks] gen2 "..os.clock()-timebefore.." #layers="..#avl.." minp.y="..minp.y.." maxp.y"..maxp.y)
     for lh,ld in ipairs(avl) do
-    print(" "..lh.."->"..ld.name)
+    print(" "..lh.."->"..ld.name.." top="..ld.height)
+     for vn,vd in pairs(ld.veins) do
+      print("  "..vn.."->"..#vd.ores)
+     end
     end
 
  local noise2d_ix = 1
  local noise3d_ix = 1
 
- for x=minp.x,maxp.x,1 do
-  for z=minp.z,maxp.z,1 do
-   for y=minp.y,maxp.y,1 do
+ for z=minp.z,maxp.z,1 do
+  for y=minp.y,maxp.y,1 do
+   for x=minp.x,maxp.x,1 do
     local p_pos = area:index(x, y, z)
-    local layer,rock
+    local layer,vein
+    local rock
     
     --* select layer
     for lh,ld in ipairs(avl) do
-     if y<ld.nmap[noise2d_ix] then
+     if (y<ld.nmap[noise2d_ix])and(ld.nmap[noise2d_ix]<ld.limit) then
       layer=ld
       rock=layer.rock
+      break
+     end
+    end
+    
+    if layer then
+     --* select vein
+     for veinname,vd in pairs(layer.veins) do
+      if vd.nmap[noise3d_ix]>vd.treshold then
+       vein=vd
+       --rock not changed
+      end
+     end
+    end
+    
+    if vein then
+     --* select ore
+     for i,ore in pairs(vein.ores) do
+      rock=ore
       break
      end
     end
@@ -64,14 +105,15 @@ minetest.register_on_generated(function(minp, maxp, seed)
     end
    
     noise3d_ix =noise3d_ix+1
+    noise2d_ix = noise2d_ix+1
    end
-   noise2d_ix = noise2d_ix+1
+   noise2d_ix = noise2d_ix-side_length
   end
  end
  manipulator:set_data(nodes)
  manipulator:calc_lighting()
  manipulator:update_liquids()
  manipulator:write_to_map()
- print("[rocks] gen "..os.clock()-timebefore)
+ print("[rocks] gen0 "..os.clock()-timebefore)
 end)
 

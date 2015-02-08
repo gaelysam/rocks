@@ -10,6 +10,7 @@ rocks.ores = {}
 rocks.register_layer=function(name,params,rock)
  assert(name)
  assert(params)
+ assert(rock)
  assert(params.gain)
  assert(params.height)
  local maxheight
@@ -18,8 +19,8 @@ rocks.register_layer=function(name,params,rock)
   gain=params.gain,
   height=params.height,
   maxheight=maxheight,
-  limit=params.limit,
-  seed=params.seed,
+  limit=((params.limit or 2)*params.gain)+params.height,
+  seed=params.seed or 0,
   rock={ node=rock },
   veins={},
   name=name
@@ -35,7 +36,7 @@ rocks.register_vein=function(name,params)
  rocks.veins[name]={
   np={
    offset=0, scale=1, octaves=1, presist=0.8,
-   spread={x=params.spread.y, y=params.spread.z, z=params.spread.x}, 
+   spread={x=params.spread.x, y=params.spread.y, z=params.spread.z}, 
    -- swapped, becouse we generate by horizontal layers
    seed=params.seed
   },
@@ -44,8 +45,8 @@ rocks.register_vein=function(name,params)
   layers=params.layers,
   ores={}
  }
- for ln,ld in pairs(rocks.layers_name) do
-  ld.veins[name]=rocks.veins[name]
+ for i,layername in pairs(params.layers) do
+  rocks.layers_name[layername].veins[name]=rocks.veins[name]
  end
  print("[rocks] vein "..name)
 end
