@@ -20,8 +20,19 @@ rocks.noiseparams_layers = {
 }
 
 dofile(modpath.."/mapgen.lua")
-dofile(modpath.."/geologica.lua")
-dofile(modpath.."/geologica_nv.lua")
+dofile(modpath.."/testing.lua")
+--dofile(modpath.."/geologica.lua")
+--dofile(modpath.."/geologica_nv.lua")
 
+print("[rocks] sorting layers")
+
+for i,d in pairs(rocks.layers_name) do table.insert(rocks.layers,d) end
+table.sort(rocks.layers,function(a,b)
+ return a.height<b.height
+end)
+
+for i,d in pairs(rocks.layers) do
+ print(" init,layer "..i.." "..minetest.serialize(d))
+end
 
 print("[rocks] loaded.")

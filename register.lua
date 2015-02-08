@@ -3,6 +3,7 @@
 rocks = {}
 
 rocks.layers = {}
+rocks.layers_name = {}
 rocks.veins = {}
 rocks.ores = {}
 
@@ -12,20 +13,19 @@ rocks.register_layer=function(name,params,rock)
  assert(params.gain)
  assert(params.height)
  local maxheight
- for ln,ld in pairs(rocks.layers) do
-  if (ld.height<params.height)and ((not ld.maxheight) or (ld.maxheight>params.height)) then ld.maxheight=params.height end
-  if (ld.height>params.height)and((not maxheight) or (maxheight>ld.height)) then maxheight=ld.height end
- end
- rocks.layers[name]= {
+
+ local ld= {
   gain=params.gain,
   height=params.height,
   maxheight=maxheight,
   limit=params.limit,
   seed=params.seed,
   rock={ node=rock },
-  veins={}
+  veins={},
+  name=name
  }
- print("[rocks] layer "..name)
+ rocks.layers_name[name]= ld
+ print("[rocks] layer "..ld.name)
 end
 
 rocks.register_vein=function(name,params)
@@ -44,7 +44,7 @@ rocks.register_vein=function(name,params)
   layers=params.layers,
   ores={}
  }
- for ln,ld in pairs(rocks.layers) do
+ for ln,ld in pairs(rocks.layers_name) do
   ld.veins[name]=rocks.veins[name]
  end
  print("[rocks] vein "..name)
