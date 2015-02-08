@@ -21,18 +21,19 @@ rocks.noiseparams_layers = {
 
 dofile(modpath.."/mapgen.lua")
 --dofile(modpath.."/testing.lua")
-dofile(modpath.."/geologica.lua")
-dofile(modpath.."/geologica_nv.lua")
 
-print("[rocks] sorting layers")
+print("[rocks] core loaded.")
 
-for i,d in pairs(rocks.layers_name) do table.insert(rocks.layers,d) end
-table.sort(rocks.layers,function(a,b)
- return a.height<b.height
+dofile(modpath.."/geologicaLayers.lua")
+dofile(modpath.."/geologicaStrata.lua")
+dofile(modpath.."/geologicaVeins.lua")
+
+minetest.register_on_mapgen_init(function(mapgen_params)
+ print("[rocks] sorting layers ("..#rocks.layers_name..")")
+ 
+ for i,d in pairs(rocks.layers_name) do table.insert(rocks.layers,d) end
+ table.sort(rocks.layers,function(a,b)
+  return a.height<b.height
+ end)
+
 end)
-
-for i,d in pairs(rocks.layers) do
- print(" init,layer "..i.." "..minetest.serialize(d))
-end
-
-print("[rocks] loaded.")

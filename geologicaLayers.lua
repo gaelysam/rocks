@@ -122,3 +122,5 @@ minetest.register_node( "rocks:andesite", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 rocks.register_layer( "andesite",{ gain=8, height=10, limit=2, seed=4 }, "rocks:andesite")
+
+print("[rocks/geologicaLayers] loaded.")

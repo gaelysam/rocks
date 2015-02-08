@@ -34,4 +34,4 @@ rocks.register_vein("limestone",{
 -- Dolomite     Sed        med   in Rhyolite, Andesite in mountains
 -- Quartzite    MM/contact vhard sandstone
 
-
+print("[rocks/geologicaStrata] loaded.")
