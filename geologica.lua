@@ -72,7 +72,7 @@ minetest.register_node( "rocks:mudstone", {
 	groups = {cracky=CcSoft, stone=1}, 
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
-rocks.register_layer( "mudstone",{ gain=10, height=-13, limit=2, seed=4 }, "air")
+rocks.register_layer( "mudstone",{ gain=10, height=-13, limit=2, seed=4 }, "rocks:mudstone")
 
 -- Slate        MM/barro   med   Under mud/clay/siltstone
 minetest.register_node( "rocks:slate", {  
