@@ -30,7 +30,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
    table.insert(avl,d) -- pridame ju
    if (d.height-d.gain)>maxp.y then break end -- ak je mimo zhora tak uz dalsie nehladaj
   else
-   print(" no higher "..d.height.." than "..minp.y)
+   --print(" no higher "..d.height.." than "..minp.y)
   end
  end
 
