@@ -54,7 +54,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
  end
 
  --
- print("[rocks] gen2 "..os.clock()-timebefore.." #layers="..#avl.." minp.y="..minp.y.." maxp.y"..maxp.y)
+ print("[rocks] gen2 "..os.clock()-timebefore.." #layers="..#avl.." minp.y="..minp.y.." maxp.y="..maxp.y)
     for lh,ld in ipairs(avl) do
     print(" "..lh.."->"..ld.name.." top="..ld.height)
      for vn,vd in pairs(ld.veins) do

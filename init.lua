@@ -29,11 +29,14 @@ dofile(modpath.."/geologicaStrata.lua")
 dofile(modpath.."/geologicaVeins.lua")
 
 minetest.register_on_mapgen_init(function(mapgen_params)
- print("[rocks] sorting layers ("..#rocks.layers_name..")")
  
  for i,d in pairs(rocks.layers_name) do table.insert(rocks.layers,d) end
  table.sort(rocks.layers,function(a,b)
   return a.height<b.height
  end)
+ 
+ -- todo: disable caves and ores
+
+ print("[rocks] mapgen initalized ("..#rocks.layers.." layers)")
 
 end)
