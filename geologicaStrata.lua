@@ -4,13 +4,13 @@ local CcMed=3
 local CcSoft=3
 
 --
--- nonvein vein
+-- Sedimentary
 --
 
 -- Claystone    Sed        soft  in mudstone
 rocks.register_vein("clay",{
         spread = {x=30, y=10, z=30},
-        treshold=0.2, -- clay should be plenty
+        treshold=0.26, -- clay should be plenty
         seed = 9,
         layers={ "mudstone" },
 })
@@ -18,6 +18,27 @@ rocks.register_ore( "clay", "default:clay", {treshold=0, chance=85 } )
 
 -- Breccia      Mixture    soft  in mudstone
 -- Conglomerate Sed        soft  in mudstone
+
+-- Coal           Ocean, inland    2x swamp
+rocks.register_vein("coal",{
+        spread = {x=20, y=10, z=20},
+        treshold=0.48, -- coal shold be less
+        seed = 10,
+        layers={ "mudstone" },
+})
+rocks.register_ore( "coal", "default:stone_with_coal", {treshold=0, chance=85 } )
+
+-- Pyrolusite     Swamp
+-- Diatomite      Volcanic, desert
+-- Glauconite     Ocean            20% sandstone
+-- Apatite        Any              Metamorphic depth
+-- Zeolite        Volcanic
+-- Fuller's Earth Desert
+-- Kaolinite      Tropics
+
+--
+-- Misc rocks
+--
 
 -- Limestone    Sed        med   in Rhyolite, Andesite in mountains
 minetest.register_node( "rocks:limestone", {  
@@ -33,7 +54,6 @@ rocks.register_vein("limestone",{
         layers={ "rhyolite", "andesite" },
 })
 rocks.register_ore( "limestone", "rocks:limestone", {treshold=0, chance=100} )
-rocks.register_ore( "limestone", "default:torch", {treshold=0, chance=15 } )
 
 -- Dolomite     Sed        med   in Rhyolite, Andesite in mountains
 minetest.register_node( "rocks:dolomite", {  
@@ -49,7 +69,6 @@ rocks.register_vein("dolomite",{
         layers={ "rhyolite", "andesite" },
 })
 rocks.register_ore( "dolomite", "rocks:dolomite", {treshold=0, chance=100} )
-rocks.register_ore( "dolomite", "default:torch", {treshold=0, chance=15 } )
 
 -- Quartzite    MM/contact vhard sandstone
 
