@@ -19,14 +19,14 @@ rocks.register_layer=function(name,params,rock)
   gain=params.gain,
   height=params.height,
   maxheight=maxheight,
-  limit=((params.limit or 2)*params.gain)+params.height,
+  limit=(params.limit*params.gain)+params.height,
   seed=params.seed or 0,
   rock={ node=rock },
   veins={},
   name=name
  }
  rocks.layers_name[name]= ld
- print("[rocks] layer "..ld.name)
+ print("[rocks] layer "..ld.name.."height="..ld.height.." limit="..ld.limit)
 end
 
 rocks.register_vein=function(name,params)

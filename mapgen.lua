@@ -87,6 +87,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
       if vd.nmap[noise3d_ix]>vd.treshold then
        vein=vd
        --rock not changed
+       break
       end
      end
     end

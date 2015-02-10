@@ -12,26 +12,45 @@ rocks.register_vein("clay",{
         spread = {x=30, y=10, z=30},
         treshold=0.2, -- clay should be plenty
         seed = 9,
-        hmin=-8, hmax=nil,
         layers={ "mudstone" },
 })
 rocks.register_ore( "clay", "default:clay", {treshold=0, chance=85 } )
-rocks.register_ore( "clay", "default:torch", {treshold=0, chance=15 } )
 
 -- Breccia      Mixture    soft  in mudstone
 -- Conglomerate Sed        soft  in mudstone
--- Skarn        MM/contact med   in mudstone in mountains
--- Hornfels     MM/contact vhard in mudstone in mountains
--- Marble       MM/contact hard  in mudstone in mountains
+
 -- Limestone    Sed        med   in Rhyolite, Andesite in mountains
-rocks.register_vein("limestone",{
-        spread = {x=10, y=10, z=10},
-        treshold=0.75,
-        seed = 10,
-        hmin=nil, hmax=nil,
-        layers={ "mudstone" },
+minetest.register_node( "rocks:limestone", {  
+	description = S("Limestone"),
+	tiles = { "rocks_Limestone.png" },
+	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
+	groups = {cracky=CcMed, stone=1}, 
 })
+rocks.register_vein("limestone",{
+        spread = {x=60, y=60, z=60},
+        treshold=0.4,
+        seed = 10,
+        layers={ "rhyolite", "andesite" },
+})
+rocks.register_ore( "limestone", "rocks:limestone", {treshold=0, chance=100} )
+rocks.register_ore( "limestone", "default:torch", {treshold=0, chance=15 } )
+
 -- Dolomite     Sed        med   in Rhyolite, Andesite in mountains
+minetest.register_node( "rocks:dolomite", {  
+	description = S("Dolomite"),
+	tiles = { "rocks_Dolomite.png" },
+	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
+	groups = {cracky=CcMed, stone=1}, 
+})
+rocks.register_vein("dolomite",{
+        spread = {x=60, y=60, z=60},
+        treshold=0.4,
+        seed = 11,
+        layers={ "rhyolite", "andesite" },
+})
+rocks.register_ore( "dolomite", "rocks:dolomite", {treshold=0, chance=100} )
+rocks.register_ore( "dolomite", "default:torch", {treshold=0, chance=15 } )
+
 -- Quartzite    MM/contact vhard sandstone
 
 print("[rocks/geologicaStrata] loaded.")
