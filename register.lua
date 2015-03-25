@@ -26,7 +26,7 @@ rocks.register_layer=function(name,params,rock)
   name=name
  }
  rocks.layers_name[name]= ld
- print("[rocks] layer "..ld.name.."height="..ld.height.." limit="..ld.limit)
+ print("[rocks] layer "..ld.name.." height="..ld.height.." limit="..ld.limit)
 end
 
 rocks.register_vein=function(name,params)
@@ -47,8 +47,8 @@ rocks.register_vein=function(name,params)
  }
  for i,layername in pairs(params.layers) do
   rocks.layers_name[layername].veins[name]=rocks.veins[name]
+  print("[rocks] vein "..name.." in "..layername)
  end
- print("[rocks] vein "..name)
 end
 
 rocks.register_ore=function( vein, node, params )
