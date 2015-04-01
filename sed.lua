@@ -8,20 +8,20 @@ local sed={
   spread = {x=80, y=80, z=80},
   octaves = 0, persist = 0 },
  bot={
-  offset = -22, scale = 20, seed=1,
+  offset = -22, scale = 10, seed=1,
   spread = {x=80, y=80, z=80},
   octaves = 2, persist = 0.7 },
  primary={ name="rocks:mudstone" },
  localized={},
  seedseq=2,
- stats={ count=0, total=0 }
+ stats={ count=0, total=0, node={}, totalnodes=0 }
 }
 
 -- Mudstone     Sed        soft  Ocean, beach, river, glaciers
 minetest.register_node( "rocks:mudstone", {  
 	description = S("Mudstone"),
 	tiles = { "rocks_Mudstone.png" },
-	groups = {cracky=3, stone=1, crumbly=4}, 
+	groups = {cracky=1, crumbly=1}, 
 	is_ground_content = true, sounds = default.node_sound_dirt_defaults(),
 })
 
@@ -30,7 +30,7 @@ minetest.register_node( "rocks:limestone", {
 	description = S("Limestone"),
 	tiles = { "rocks_Limestone.png" },
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
-	groups = {cracky=CcMed, stone=1}, 
+	groups = {cracky=2},
 })
 
 
@@ -42,6 +42,7 @@ local reg=function(name,param)
   secondary=(param.secondary),
   seed=seedseq,
  }
+ sed.stats.node[name]=0
  sed.seedseq=sed.seedseq+1
 end
 rocks.register_sedimentary=reg
@@ -53,11 +54,11 @@ rocks.register_sedimentary=reg
 --Conglomerate Weak   Localized continental, folded
 -->Limestone    Medium Localized continental, folded; primary oceanic, hills
 -->Coal         -      Large beds, twice as common in swamps
- --reg("rocks:breccia",  { spread=35, height=30, treshold=0.85 })
- reg("default:clay",{ spread=40, height=30, treshold=0.70 })
- --reg("rocks:conglomerate", { spread=35, height=30, treshold=0.85 })
- reg("rocks:limestone",    { spread=40, height=30, treshold=0.80 })
- reg("default:stone_with_coal", { spread=10, height=6, treshold=0.70 })
+ reg("rocks:limestone",    { spread=64, height=32, treshold=0.56 })
+ --reg("rocks:breccia",  { spread=64, height=32, treshold=0.6 })
+ --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
+ reg("default:clay",{ spread=24, height=16, treshold=0.63 })
+ reg("default:stone_with_coal", { spread=48, height=14, treshold=0.45 })
 
 minetest.register_on_generated(function(minp, maxp, seed)
  if   ( (sed.top.offset+sed.top.scale)>minp.y )
@@ -85,7 +86,8 @@ minetest.register_on_generated(function(minp, maxp, seed)
    {
     noise=minetest.get_perlin_map(np,map_lengths_xyz):get3dMap_flat(minp),
     treshold=loc.treshold,
-    ctx= minetest.get_content_id(name)
+    ctx= minetest.get_content_id(name),
+    ndn=name
    })
   end
   local noise2d_ix = 1
@@ -98,19 +100,21 @@ minetest.register_on_generated(function(minp, maxp, seed)
      if  (y>bottom[noise2d_ix])
      and ((nodes[pos]==stone_ctx) or (nodes[pos]==dirt_ctx))
      then
-      nodes[pos] = sed.primary.ctx
+      sed.stats.totalnodes=sed.stats.totalnodes+1
+      if nodes[pos]==stone_ctx then nodes[pos] = air_ctx end --sed.primary.ctx
       for k,loc in pairs(localized) do
-       if (loc.noise[noise3d_ix]>loc.treshold) then
+       if ( loc.noise[noise3d_ix] > loc.treshold) then
         nodes[pos]=loc.ctx
-        break
+        sed.stats.node[loc.ndn]=sed.stats.node[loc.ndn]+1
        end
       end
      end
      noise2d_ix=noise2d_ix+1
      noise3d_ix=noise3d_ix+1
     end
-    noise2d_ix = noise2d_ix-side_length
+    noise2d_ix=noise2d_ix-side_length
    end
+   noise2d_ix=noise2d_ix+side_length
   end
   manipulator:set_data(nodes)
   --manipulator:calc_lighting()
@@ -120,11 +124,15 @@ minetest.register_on_generated(function(minp, maxp, seed)
   print("[rocks] sedimentary gen2 "..os.clock()-timebefore)
   sed.stats.count=sed.stats.count+1
   sed.stats.total=sed.stats.total+(os.clock()-timebefore)
+  sed.stats.side=side_length
  end
 end)
 
 minetest.register_on_shutdown(function()
- print("[rocks](sed) on_shutdown: generated total "..sed.stats.count.." chunks in "..sed.stats.total.." seconds ("..(sed.stats.total/sed.stats.count).." seconds per chunk)")
+ print("[rocks](sed) on_shutdown: generated total "..sed.stats.count.." chunks in "..sed.stats.total.." seconds ("..(sed.stats.total/sed.stats.count).." seconds per "..sed.stats.side.."^3 chunk)")
+ for name,total in pairs(sed.stats.node) do
+  print("[rocks](sed) "..name..": "..total.." nodes placed ("..(total*100)/(sed.stats.count*sed.stats.totalnodes).." %)")
+ end
 end)
 
 -- ~ Tomas Brod
