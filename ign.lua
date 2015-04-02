@@ -14,7 +14,7 @@ local ign={
  primary={ name="rocks:basalt" },
  localized={},
  stats={ count=0, total=0, node={}, totalnodes=0 },
- debugging=0
+ debugging=nil
 }
 
 -- Basalt       Ex/Mafic   hard  same as diorite, byt limit=0.5
