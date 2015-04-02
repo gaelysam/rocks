@@ -1,3 +1,5 @@
+print("[rocks] mod initializing")
+
 -- Load translation library if intllib is installed
 
 if (minetest.get_modpath("intllib")) then
@@ -8,16 +10,14 @@ if (minetest.get_modpath("intllib")) then
 end
 
 rocks={}
+rocksl={}
 
 local modpath=minetest.get_modpath(minetest.get_current_modname())
 
-print("[rocks] begin")
-
+dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/sed.lua")
+dofile(modpath.."/ign.lua")
 
 minetest.register_on_mapgen_init(function(mapgen_params)
  -- todo: disable caves and ores
- print("[rocks] mapgen initalized ")
 end)
-
-print("[rocks] done")
