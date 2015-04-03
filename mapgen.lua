@@ -2,10 +2,14 @@
 -- layer generator
 --
 
+local print2=function(text)
+ minetest.log("verbose","rocks/gen/ "..text)
+end
+
 rocksl.seedseq=0
 rocksl.GetNextSeed=function()
  rocksl.seedseq=rocksl.seedseq+20
- print("seed "..rocksl.seedseq)
+ print2("seed "..rocksl.seedseq)
  return rocksl.seedseq
 end
 
@@ -56,13 +60,13 @@ rocksl.layergen=function(layer, minp, maxp, seed)
   end
   local noise2d_ix = 1
   local noise3d_ix = 1
-  print("after noise: "..(os.clock()-timebefore))
+  print2("after noise: "..(os.clock()-timebefore))
   for z=minp.z,maxp.z,1 do
    for y=minp.y,maxp.y,1 do
     for x=minp.x,maxp.x,1 do
      local pos = area:index(x, y, z)
      if  (y>bottom[noise2d_ix])
-     and ((nodes[pos]==stone_ctx) or (nodes[pos]==dirt_ctx))
+     and (nodes[pos]~=air_ctx)
      then
       layer.stats.totalnodes=layer.stats.totalnodes+1
       if nodes[pos]==stone_ctx then nodes[pos] = layer.primary.ctx end
@@ -81,7 +85,7 @@ rocksl.layergen=function(layer, minp, maxp, seed)
    end
    noise2d_ix=noise2d_ix+side_length
   end
-  print("after loop: "..(os.clock()-timebefore))
+  print2("after loop: "..(os.clock()-timebefore))
   manipulator:set_data(nodes)
   --manipulator:calc_lighting()
   --manipulator:update_liquids()
@@ -89,7 +93,7 @@ rocksl.layergen=function(layer, minp, maxp, seed)
    manipulator:set_lighting({day=15,night=15})
   end
   manipulator:write_to_map()
-  print("after commit: "..(os.clock()-timebefore))
+  print2("after commit: "..(os.clock()-timebefore))
   layer.stats.count=layer.stats.count+1
   layer.stats.total=layer.stats.total+(os.clock()-timebefore)
   layer.stats.side=side_length

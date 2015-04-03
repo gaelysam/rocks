@@ -1,4 +1,4 @@
-print("[rocks] mod initializing")
+minetest.log("info","[rocks] mod initializing")
 
 -- Load translation library if intllib is installed
 
@@ -11,6 +11,10 @@ end
 
 rocks={}
 rocksl={}
+
+rocksl.print=function(text)
+ print("[rocks] "..text)
+end
 
 local modpath=minetest.get_modpath(minetest.get_current_modname())
 

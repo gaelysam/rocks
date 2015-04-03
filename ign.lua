@@ -60,10 +60,10 @@ minetest.register_on_generated(function(minp, maxp, seed)
 end)
 
 minetest.register_on_shutdown(function()
- if (ign.stats.count==0) then print("[rocks](ign) stats not available, no chunks generated") return end
- print("[rocks](ign) generated total "..ign.stats.count.." chunks in "..ign.stats.total.." seconds ("..(ign.stats.total/ign.stats.count).." seconds per "..ign.stats.side.."^3 chunk)")
+ if (ign.stats.count==0) then rocksl.print("[rocks](ign) stats not available, no chunks generated") return end
+ rocksl.print("[rocks](ign) generated total "..ign.stats.count.." chunks in "..ign.stats.total.." seconds ("..(ign.stats.total/ign.stats.count).." seconds per "..ign.stats.side.."^3 chunk)")
  for name,total in pairs(ign.stats.node) do
-  print("[rocks](ign) "..name..": "..total.." nodes placed ("..(total*100)/(ign.stats.totalnodes).." %)")
+  rocksl.print("[rocks](ign) "..name..": "..total.." nodes placed ("..(total*100)/(ign.stats.totalnodes).." %)")
  end
 end)
 
