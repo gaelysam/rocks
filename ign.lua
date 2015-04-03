@@ -51,9 +51,9 @@ end
 rocks.register_igneous=reg
 
 -- rock registration
- reg("rocks:granite", { spread=40, height=32, treshold=0.04})
- reg("rocks:diorite", { spread=40, height=32, treshold=0.24})
- reg("rocks:gabbro",  { spread=40, height=32, treshold=0.33})
+ reg("rocks:granite", { spread=40, height=32, treshold=0.06})
+ reg("rocks:diorite", { spread=40, height=32, treshold=0.23})
+ reg("rocks:gabbro",  { spread=40, height=32, treshold=0.36})
 
 minetest.register_on_generated(function(minp, maxp, seed)
  rocksl.layergen(ign,minp,maxp,seed)

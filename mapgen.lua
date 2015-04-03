@@ -14,13 +14,14 @@ rocksl.GetNextSeed=function()
 end
 
 rocksl.register_blob=function(layer,name,param)
- layer.localized[name]={
+ table.insert(layer.localized,{
+  primary=name,
   spread=(param.spread or 20),
   height=(param.height or 15),
   treshold=(param.treshold or 0.85),
   secondary=param.secondary,
   seed=(rocksl.GetNextSeed()),
- }
+ })
  layer.stats.node[name]=0
 end
 
@@ -45,7 +46,7 @@ rocksl.layergen=function(layer, minp, maxp, seed)
   -- noises:
   local bottom=minetest.get_perlin_map(layer.bot,map_lengths_xyz):get2dMap_flat({x=minp.x, y=minp.z})
   local localized={}
-  for name,loc in pairs(layer.localized) do
+  for _,loc in ipairs(layer.localized) do
    --defaults and overrides
    local np={ offset = 0, scale = 1, octaves = 1, persist = 0.7,
     spread = {x=loc.spread, y=loc.height, z=loc.spread}, seed=loc.seed}
@@ -54,8 +55,8 @@ rocksl.layergen=function(layer, minp, maxp, seed)
    {
     noise=minetest.get_perlin_map(np,map_lengths_xyz):get3dMap_flat(minp),
     treshold=loc.treshold,
-    ctx= minetest.get_content_id(name),
-    ndn=name
+    ctx= minetest.get_content_id(loc.primary),
+    ndn=loc.primary
    })
   end
   local noise2d_ix = 1
@@ -65,8 +66,8 @@ rocksl.layergen=function(layer, minp, maxp, seed)
    for y=minp.y,maxp.y,1 do
     for x=minp.x,maxp.x,1 do
      local pos = area:index(x, y, z)
-     if  (y>bottom[noise2d_ix])
-     and (nodes[pos]~=air_ctx)
+     if  (y>bottom[noise2d_ix]) and (y<layer.top.offset)
+     and ( (nodes[pos]==stone_ctx) or (nodes[pos]==dirt_ctx) )
      then
       layer.stats.totalnodes=layer.stats.totalnodes+1
       if nodes[pos]==stone_ctx then nodes[pos] = layer.primary.ctx end

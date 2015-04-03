@@ -50,8 +50,8 @@ rocks.register_sedimentary=reg
  reg("rocks:limestone",    { spread=64, height=32, treshold=0.36 })
  --reg("rocks:breccia",  { spread=64, height=32, treshold=0.6 })
  --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
- reg("default:clay",{ spread=48, height=14, treshold=0.50 })
  reg("default:stone_with_coal", { spread=48, height=14, treshold=0.40 })
+ reg("default:clay",{ spread=48, height=14, treshold=0.50 })
 
 minetest.register_on_generated(function(minp, maxp, seed)
  rocksl.layergen(sed,minp,maxp,seed)
