@@ -25,6 +25,8 @@ rocksl.register_blob=function(layer,name,param)
  layer.stats.node[name]=0
 end
 
+rocksl.register_vein=function(layer,name,param)
+
 rocksl.layergen=function(layer, minp, maxp, seed)
  if   ( (layer.top.offset+layer.top.scale)>minp.y )
   and ( (layer.bot.offset-layer.bot.scale)<maxp.y )
@@ -101,37 +103,70 @@ rocksl.layergen=function(layer, minp, maxp, seed)
  end
 end
 
+local ignore_wherein=1
+
 rocksl.veingen=function(veins,minp,maxp,seed)
  local side_length=(maxp.y-minp.y)
  local random=PseudoRandom(seed-79)
- local noise=minetest.get_perlin(-79,1,0.7,8)
  print("begin veingen")
+ local timebefore=os.clock();
+ local manipulator, emin, emax = minetest.get_mapgen_object("voxelmanip")
+ local nodes = manipulator:get_data()
+ local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
+ local did_generate=nil
  for _,vein in ipairs(veins) do
   if (minp.y<vein.maxy) and (maxp.y>vein.maxy) then
+   local vr2=vein.radius.average^2
+   local vrm=vein.radius.average+vein.radius.amplitude
+   local noise_map=minetest.get_perlin_map(
+    {
+     seed=-79,
+     scale=vein.radius.amplitude,
+     offset=0, octaves=1, persist=0.7,
+     spread={x=vein.radius.frequency, y=vein.radius.frequency, z=vein.radius.frequency}
+    },{x=(vrm*2)+1, y=(vrm*2)+1, z=(vrm*2)+1}
+   )
    local iterations_count= (vein.rarity*side_length)^3
-   iterations_count=iterations_count+random:next(-1,1)
+   iterations_count=iterations_count+(random:next(0,100)/100)
+   local primary_ctx=minetest.get_content_id(vein.primary)
+   local wherein_ctx=minetest.get_content_id(vein.wherein)
+   print("vein "..vein.primary.." ic="..iterations_count.." p="..primary_ctx.." w="..wherein_ctx)
    for iteration=1, iterations_count do
     local x0=minp.x+ random:next(0,side_length)
     local y0=minp.y+ random:next(0,side_length)
     local z0=minp.z+ random:next(0,side_length)
-    if true or (minetest.get_node({x0,y0,z0}).name==vein.wherein) then
-     print("vein "..vein.primary.." @ "..x0..","..y0..","..z0)
-     for x=-vein.radius, vein.radius do
-      for y=-vein.radius, vein.radius do
-       for z=-vein.radius, vein.radius do
-       p={x=x+x0,y=y+y0,z=z+z0}
-       local nv=noise:get3d(p)*5
-       if ((x^2)+(y^2)+(z^2))<((vein.radius+nv)^2) then
-        minetest.set_node(p, {name=vein.primary})
-       end
+    local noise=noise_map:get3dMap_flat({x=x0-vrm, y=y0-vrm, z=z0-vrm})
+    local noise_ix=1
+    local posi = area:index(x0, y0, z0)
+    if ignore_wherein or (nodes[posi]==wherein_ctx) then
+     print("vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
+     did_generate=1
+     for x=-vrm, vrm do
+      for y=-vrm, vrm do
+       for z=-vrm, vrm do
+        local posc = {x=x+x0,y=y+y0,z=z+z0}
+        posi = area:index(posc.x, posc.y, posc.z)
+        local nv=noise[noise_ix]
+        if ((x^2)+(y^2)+(z^2))<((vein.radius.average+nv)^2) then
+         --minetest.set_node(posc, {name=vein.primary})
+         nodes[posi]=primary_ctx
+        end
+        noise_ix=noise_ix+1
      end end end
     else
-     print("vein "..vein.primary.." bad environmnent")
+     --print("vein "..vein.primary.." bad environmnent -"..minetest.get_node({x0,y0,z0}).name.."="..nodes[posi])
     end
    end
   end
  end
- print("end veingen")
+ if did_generate then
+  manipulator:set_data(nodes)
+  --manipulator:calc_lighting()
+  manipulator:write_to_map()
+  print("end veingen "..(os.clock()-timebefore))
+ else
+  print("end veingen (nothin generated)")
+ end
 end
 
 -- ~ Tomas Brod

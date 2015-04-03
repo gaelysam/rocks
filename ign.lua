@@ -60,8 +60,7 @@ local sample_vein_col={
  { primary="default:nyancat",
    wherein="rocks:granite",
    miny=-160, maxy=20,
-   radius=10,
-   --radius={ average=15, amplitude=6 },
+   radius={ average=10, amplitude=4, frequency=8 },
    density=1,
    rarity=0.025, -- this^3*mapblock_volume veins per mapblock
    localized={
