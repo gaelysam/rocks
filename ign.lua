@@ -55,8 +55,26 @@ rocks.register_igneous=reg
  reg("rocks:diorite", { spread=40, height=32, treshold=0.23})
  reg("rocks:gabbro",  { spread=40, height=32, treshold=0.36})
 
+-- vein stuff
+local sample_vein_col={
+ { primary="default:nyancat",
+   wherein="rocks:granite",
+   miny=-160, maxy=20,
+   radius=10,
+   --radius={ average=15, amplitude=6 },
+   density=1,
+   rarity=0.025, -- this^3*mapblock_volume veins per mapblock
+   localized={
+    { primary="rocks:pegmatite_diamond", size=3, count=5,
+      rarity=0.3 -- (this/count) chance of spawning cluster in the vein
+    }
+   }
+ }
+}
+
 minetest.register_on_generated(function(minp, maxp, seed)
  rocksl.layergen(ign,minp,maxp,seed)
+ rocksl.veingen(sample_vein_col,minp,maxp,seed)
 end)
 
 minetest.register_on_shutdown(function()

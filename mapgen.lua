@@ -101,4 +101,37 @@ rocksl.layergen=function(layer, minp, maxp, seed)
  end
 end
 
+rocksl.veingen=function(veins,minp,maxp,seed)
+ local side_length=(maxp.y-minp.y)
+ local random=PseudoRandom(seed-79)
+ local noise=minetest.get_perlin(-79,1,0.7,8)
+ print("begin veingen")
+ for _,vein in ipairs(veins) do
+  if (minp.y<vein.maxy) and (maxp.y>vein.maxy) then
+   local iterations_count= (vein.rarity*side_length)^3
+   iterations_count=iterations_count+random:next(-1,1)
+   for iteration=1, iterations_count do
+    local x0=minp.x+ random:next(0,side_length)
+    local y0=minp.y+ random:next(0,side_length)
+    local z0=minp.z+ random:next(0,side_length)
+    if true or (minetest.get_node({x0,y0,z0}).name==vein.wherein) then
+     print("vein "..vein.primary.." @ "..x0..","..y0..","..z0)
+     for x=-vein.radius, vein.radius do
+      for y=-vein.radius, vein.radius do
+       for z=-vein.radius, vein.radius do
+       p={x=x+x0,y=y+y0,z=z+z0}
+       local nv=noise:get3d(p)*5
+       if ((x^2)+(y^2)+(z^2))<((vein.radius+nv)^2) then
+        minetest.set_node(p, {name=vein.primary})
+       end
+     end end end
+    else
+     print("vein "..vein.primary.." bad environmnent")
+    end
+   end
+  end
+ end
+ print("end veingen")
+end
+
 -- ~ Tomas Brod
