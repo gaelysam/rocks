@@ -13,7 +13,7 @@ rocksl.GetNextSeed=function()
  return rocksl.seedseq
 end
 
-rocksl.register_blob=function(layer,name,param)
+rocksl.register_stratus=function(layer,name,param)
  table.insert(layer.localized,{
   primary=name,
   spread=(param.spread or 20),
@@ -25,7 +25,17 @@ rocksl.register_blob=function(layer,name,param)
  layer.stats.node[name]=0
 end
 
-rocksl.register_vein=function(layer,name,param)
+rocksl.register_vein=function(col,name,param)
+ table.insert(col,{
+   primary=name,
+   wherein=param.wherein,
+   miny=param.miny, maxy=param.maxy,
+   radius={ average=param.radius.average, amplitude=param.radius.amplitude, frequency=param.radius.frequency },
+   density=(param.density or 1),
+   rarity=param.rarity,
+   localized={}
+  })
+end
 
 rocksl.layergen=function(layer, minp, maxp, seed)
  if   ( (layer.top.offset+layer.top.scale)>minp.y )
@@ -103,12 +113,11 @@ rocksl.layergen=function(layer, minp, maxp, seed)
  end
 end
 
-local ignore_wherein=1
+local ignore_wherein=nil
 
 rocksl.veingen=function(veins,minp,maxp,seed)
  local side_length=(maxp.y-minp.y)
  local random=PseudoRandom(seed-79)
- print("begin veingen")
  local timebefore=os.clock();
  local manipulator, emin, emax = minetest.get_mapgen_object("voxelmanip")
  local nodes = manipulator:get_data()
@@ -130,7 +139,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
    iterations_count=iterations_count+(random:next(0,100)/100)
    local primary_ctx=minetest.get_content_id(vein.primary)
    local wherein_ctx=minetest.get_content_id(vein.wherein)
-   print("vein "..vein.primary.." ic="..iterations_count.." p="..primary_ctx.." w="..wherein_ctx)
+   --print("vein "..vein.primary.." ic="..iterations_count.." p="..primary_ctx.." w="..wherein_ctx)
    for iteration=1, iterations_count do
     local x0=minp.x+ random:next(0,side_length)
     local y0=minp.y+ random:next(0,side_length)
@@ -139,7 +148,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
     local noise_ix=1
     local posi = area:index(x0, y0, z0)
     if ignore_wherein or (nodes[posi]==wherein_ctx) then
-     print("vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
+     --print("vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
      did_generate=1
      for x=-vrm, vrm do
       for y=-vrm, vrm do

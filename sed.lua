@@ -35,7 +35,7 @@ minetest.register_node( "rocks:limestone", {
 
 
 local reg=function(name,param)
- rocksl.register_blob(sed,name,param)
+ rocksl.register_stratus(sed,name,param)
 end
 
 rocks.register_sedimentary=reg
