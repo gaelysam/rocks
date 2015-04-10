@@ -33,7 +33,7 @@ rocksl.register_vein=function(col,name,param)
    radius={ average=param.radius.average, amplitude=param.radius.amplitude, frequency=param.radius.frequency },
    density=(param.density or 1),
    rarity=param.rarity,
-   localized={}
+   secondary=(param.ores or {}),
   })
 end
 
@@ -41,9 +41,9 @@ rocksl.layergen=function(layer, minp, maxp, seed)
  if   ( (layer.top.offset+layer.top.scale)>minp.y )
   and ( (layer.bot.offset-layer.bot.scale)<maxp.y )
  then
-  stone_ctx= minetest.get_content_id("default:stone")
-  air_ctx= minetest.get_content_id("air")
-  dirt_ctx= minetest.get_content_id("default:dirt")
+  local stone_ctx= minetest.get_content_id("default:stone")
+  local air_ctx= minetest.get_content_id("air")
+  local dirt_ctx= minetest.get_content_id("default:dirt")
   if layer.debugging then 
    layer.primary.ctx= air_ctx
   else
@@ -138,6 +138,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
    local iterations_count= (vein.rarity*side_length)^3
    iterations_count=iterations_count+(random:next(0,100)/100)
    local primary_ctx=minetest.get_content_id(vein.primary)
+   for _,sec in pairs(vein.secondary) do sec.ctx=minetest.get_content_id(sec.ore) end
    local wherein_ctx=minetest.get_content_id(vein.wherein)
    --print("vein "..vein.primary.." ic="..iterations_count.." p="..primary_ctx.." w="..wherein_ctx)
    for iteration=1, iterations_count do
@@ -148,7 +149,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
     local noise_ix=1
     local posi = area:index(x0, y0, z0)
     if ignore_wherein or (nodes[posi]==wherein_ctx) then
-     --print("vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
+     print("vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
      did_generate=1
      for x=-vrm, vrm do
       for y=-vrm, vrm do
@@ -157,8 +158,15 @@ rocksl.veingen=function(veins,minp,maxp,seed)
         posi = area:index(posc.x, posc.y, posc.z)
         local nv=noise[noise_ix]
         if ((x^2)+(y^2)+(z^2))<((vein.radius.average+nv)^2) then
-         --minetest.set_node(posc, {name=vein.primary})
          nodes[posi]=primary_ctx
+         local luck=random:next(0,99)
+         for _,sec in pairs(vein.secondary) do
+          luck=luck-sec.percent
+          if luck<=0 then 
+           nodes[posi]=sec.ctx
+           break
+          end
+         end
         end
         noise_ix=noise_ix+1
      end end end
@@ -174,7 +182,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
   manipulator:write_to_map()
   print("end veingen "..(os.clock()-timebefore))
  else
-  print("end veingen (nothin generated)")
+  --print("end veingen (nothin generated)")
  end
 end
 

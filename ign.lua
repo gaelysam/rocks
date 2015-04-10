@@ -64,10 +64,12 @@ rocksl.register_vein(ign.veins,"default:nyancat",{
   radius={ average=10, amplitude=4, frequency=8 },
   density=1,
   rarity=0.025, -- this^3*mapblock_volume veins per mapblock
+  ores={
+    { ore="default:sand", percent=30 },
+    { ore="default:dirt", percent=30 },
+  }
   })
 
---    { primary="rocks:pegmatite_diamond", size=3, count=5,
---      rarity=0.3 -- (this/count) chance of spawning cluster in the vein
 
 minetest.register_on_generated(function(minp, maxp, seed)
  rocksl.layergen(ign,minp,maxp,seed)
