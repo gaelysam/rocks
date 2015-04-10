@@ -157,7 +157,8 @@ rocksl.veingen=function(veins,minp,maxp,seed)
         local posc = {x=x+x0,y=y+y0,z=z+z0}
         posi = area:index(posc.x, posc.y, posc.z)
         local nv=noise[noise_ix]
-        if ((x^2)+(y^2)+(z^2))<((vein.radius.average+nv)^2) then
+        local luck=random:next(0,99)
+        if (luck<vein.density) and (((x^2)+(y^2)+(z^2))<((vein.radius.average+nv)^2)) then
          nodes[posi]=primary_ctx
          local luck=random:next(0,99)
          for _,sec in pairs(vein.secondary) do

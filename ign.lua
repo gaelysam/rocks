@@ -58,12 +58,17 @@ rocks.register_igneous_stratus=reg
 -- vein stuff
 ign.veins={}
 
-rocksl.register_vein(ign.veins,"default:nyancat",{
+local regv=function(name,param)
+ rocksl.register_vein(ign.veins,name,param)
+end
+rocks.register_vein=regv
+
+rocks.register_vein("default:nyancat",{
   wherein="rocks:granite",
   miny=-160, maxy=20,
   radius={ average=10, amplitude=4, frequency=8 },
-  density=1,
-  rarity=0.025, -- this^3*mapblock_volume veins per mapblock
+  density=100,
+  rarity=0.0025, -- this^3*mapblock_volume veins per mapblock
   ores={
     { ore="default:sand", percent=30 },
     { ore="default:dirt", percent=30 },
