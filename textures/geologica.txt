@@ -11,3 +11,4 @@ rocks_Peridotite.png
 rocks_Rhyolite.png
 rocks_Schist.png
 rocks_Slate.png
+rocks_Skarn.png
