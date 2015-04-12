@@ -153,7 +153,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
     local noise_ix=1
     local posi = area:index(x0, y0, z0)
     if ignore_wherein or wherein_set[nodes[posi]] then
-     print("vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
+     print("[rocks] vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
      did_generate=1
      for x=-vrm, vrm do
       for y=-vrm, vrm do
@@ -184,7 +184,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
   manipulator:set_data(nodes)
   --manipulator:calc_lighting()
   manipulator:write_to_map()
-  print("end veingen "..(os.clock()-timebefore))
+  print2("end veingen "..(os.clock()-timebefore))
  else
   --print("end veingen (nothin generated)")
  end

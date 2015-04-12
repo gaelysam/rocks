@@ -2,8 +2,8 @@
 -- Pegmatite vein
 --
 
-local CommonRarity=0.02 --too high... should be like 0.013
-local CommonRadius=10
+local CommonRarity=0.024
+local CommonRadius=8
 local CommonWherein={ "rocks:granite" }
 
 minetest.register_node( "rocks:pegmatite", {
@@ -15,4 +15,23 @@ minetest.register_node( "rocks:pegmatite", {
 
 -- ores have to be redefined for pegmatite background
 
+-- Lepidolite         Li    Medium Pegmatite (2.5%)
+-- Cassiterite        Sn    Strong Granite, Pegmatite (1.5%)
+-- Pollucite          Cs    Strong Pegmatite (0.1%)
+-- Scheelite          W     Medium SEDEX, Pegmatite (2%), Skarn
+-- Spodumene          Li    Strong Pegmatite (7%)
+-- Tantalite          Ta    Strong Pegmatite (2%)
+-- Wolframite         W     Medium Pegmatite (1%)
+-- Spodumene        7%
+-- Muscovite (mica) 7%
+-- Kyanite          5%
 
+-- pegmatites are only 1 kind
+rocks.register_vein("rocks:pegmatite",{
+  wherein={ "rocks:granite" },
+  miny=-160, maxy=20,
+  radius={ average=8, amplitude=4, frequency=5 },
+  density=80, rarity=CommonRarity,
+  ores={
+  }
+ })
