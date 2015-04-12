@@ -22,6 +22,7 @@ dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/sed.lua")
 dofile(modpath.."/ign.lua")
 dofile(modpath.."/skarn.lua")
+dofile(modpath.."/pegmatite.lua")
 
 minetest.register_on_mapgen_init(function(mapgen_params)
  -- todo: disable caves and ores
