@@ -4,7 +4,7 @@
 
 local CommonRarity=0.02 --too high... should be like 0.013
 local CommonRadius=10
-local CommonWherein={ "rocks:granite" }
+local CommonWherein={ "rocks:granite", "rocks:limestone" }
 
 minetest.register_node( "rocks:skarn", {  
 	description = S("Skarn"),
@@ -15,8 +15,11 @@ minetest.register_node( "rocks:skarn", {
 
 -- ores have to be redefined for skarn background
 
-   -- There is also a chance of isolated lapis crystals
-   -- enrichments: scheelite and wollastonite  -> in each vein
+   -- Todo:
+   -- There is also a chance of isolated lapis crystals, Gold
+   -- Molybdenite with Cu
+   -- wollastonite with Fe
+   -- enrichments: scheelite and wollastonite
 
 -- Chalcopyrite
 minetest.register_node( "rocks:skarn_chalcopyrite", {  
@@ -44,6 +47,7 @@ rocks.register_vein("rocks:skarn",{
    -- { ore="rocks:hornfels", percent=10 },
     { ore="rocks:skarn_chalcopyrite", percent=30 },
     { ore="rocks:skarn_malachyte", percent=15 },
+   -- { ore="rocks:skarn_molybdenite", percent=5 },
   }
  })
 
