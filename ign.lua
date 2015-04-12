@@ -64,7 +64,7 @@ end
 rocks.register_vein=regv
 
 rocks.register_vein("default:nyancat",{
-  wherein="rocks:granite",
+  wherein={"rocks:granite"},
   miny=-160, maxy=20,
   radius={ average=10, amplitude=4, frequency=8 },
   density=100,

@@ -2,8 +2,9 @@
 -- Skarn deposit
 --
 
-local CommonRarity=0.02
+local CommonRarity=0.02 --too high... should be like 0.013
 local CommonRadius=10
+local CommonWherein={ "rocks:granite" }
 
 minetest.register_node( "rocks:skarn", {  
 	description = S("Skarn"),
@@ -33,7 +34,7 @@ minetest.register_node( "rocks:skarn_malachyte", {
 })
 -- Chalcopyrite/Malachyte skarn mix
 rocks.register_vein("rocks:skarn",{
-  wherein="rocks:granite",
+  wherein=CommonWherein,
   miny=-160, maxy=20,
   radius={ average=CommonRadius, amplitude=3, frequency=5 },
   density=80, rarity=CommonRarity,
@@ -62,7 +63,7 @@ minetest.register_node( "rocks:skarn_galena", {
 })
 -- Pb Zn skarn mix
 rocks.register_vein("rocks:skarn",{
-  wherein="rocks:granite",
+  wherein=CommonWherein,
   miny=-160, maxy=20,
   radius={ average=CommonRadius, amplitude=3, frequency=5 },
   density=80, rarity=CommonRarity,
@@ -84,7 +85,7 @@ minetest.register_node( "rocks:skarn_magnetite", {
 })
 -- Fe skarn mix
 rocks.register_vein("rocks:skarn",{
-  wherein="rocks:granite",
+  wherein=CommonWherein,
   miny=-160, maxy=20,
   radius={ average=CommonRadius, amplitude=3, frequency=5 },
   density=80, rarity=CommonRarity,
@@ -112,7 +113,7 @@ minetest.register_node( "rocks:vermiculite", {
 })
 -- magnesite/vermiculite skarn mix
 rocks.register_vein("rocks:skarn",{
-  wherein="rocks:granite",
+  wherein=CommonWherein,
   miny=-160, maxy=20,
   radius={ average=CommonRadius, amplitude=3, frequency=5 },
   density=80, rarity=CommonRarity,

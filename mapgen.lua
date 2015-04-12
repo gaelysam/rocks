@@ -26,7 +26,7 @@ rocksl.register_stratus=function(layer,name,param)
 end
 
 rocksl.register_vein=function(col,name,param)
- table.insert(col,{
+ local d={
    primary=name,
    wherein=param.wherein,
    miny=param.miny, maxy=param.maxy,
@@ -34,7 +34,8 @@ rocksl.register_vein=function(col,name,param)
    density=(param.density or 1),
    rarity=param.rarity,
    secondary=(param.ores or {}),
-  })
+  }
+ table.insert(col,d)
 end
 
 rocksl.layergen=function(layer, minp, maxp, seed)
@@ -136,11 +137,14 @@ rocksl.veingen=function(veins,minp,maxp,seed)
     },{x=(vrm*2)+1, y=(vrm*2)+1, z=(vrm*2)+1}
    )
    local iterations_count= (vein.rarity*side_length)^3
+   -- Resolve node names to id's
    iterations_count=iterations_count+(random:next(0,100)/100)
    local primary_ctx=minetest.get_content_id(vein.primary)
    for _,sec in pairs(vein.secondary) do sec.ctx=minetest.get_content_id(sec.ore) end
-   local wherein_ctx=minetest.get_content_id(vein.wherein)
-   --print("vein "..vein.primary.." ic="..iterations_count.." p="..primary_ctx.." w="..wherein_ctx)
+   --old:local wherein_ctx=minetest.get_content_id(vein.wherein)
+   local wherein_set={}
+   for _,wi in pairs(vein.wherein) do wherein_set[minetest.get_content_id(wi)]=true end
+   --print("vein "..vein.primary.." ic="..iterations_count.." p="..primary_ctx)
    for iteration=1, iterations_count do
     local x0=minp.x+ random:next(0,side_length)
     local y0=minp.y+ random:next(0,side_length)
@@ -148,7 +152,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
     local noise=noise_map:get3dMap_flat({x=x0-vrm, y=y0-vrm, z=z0-vrm})
     local noise_ix=1
     local posi = area:index(x0, y0, z0)
-    if ignore_wherein or (nodes[posi]==wherein_ctx) then
+    if ignore_wherein or wherein_set[nodes[posi]] then
      print("vein "..vein.primary.." @ "..x0..","..y0..","..z0.." vrm="..vrm)
      did_generate=1
      for x=-vrm, vrm do
@@ -157,7 +161,7 @@ rocksl.veingen=function(veins,minp,maxp,seed)
         local posc = {x=x+x0,y=y+y0,z=z+z0}
         posi = area:index(posc.x, posc.y, posc.z)
         local nv=noise[noise_ix]
-        if (ignore_wherein or (nodes[posi]==wherein_ctx)) and (((x^2)+(y^2)+(z^2))<((vein.radius.average+nv)^2)) then
+        if (ignore_wherein or wherein_set[nodes[posi]]) and (((x^2)+(y^2)+(z^2))<((vein.radius.average+nv)^2)) then
          nodes[posi]=primary_ctx
          local luck=random:next(0,99)
          for _,sec in pairs(vein.secondary) do
