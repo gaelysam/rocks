@@ -38,6 +38,11 @@ rocksl.register_vein=function(col,name,param)
  table.insert(col,d)
 end
 
+-- TODO: rewrite above function to register normal minetest ore, with
+-- special params, so the below func is not necesary. The mt oregen runs in 
+-- separate therad (emerge) and it does not block server.
+-- params: type=scatter scacrity=1 size=3 ores=27 : full chance of spawning, only limited by noise thr
+
 rocksl.layergen=function(layer, minp, maxp, seed)
  if   ( (layer.top.offset+layer.top.scale)>minp.y )
   and ( (layer.bot.offset-layer.bot.scale)<maxp.y )
