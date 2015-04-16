@@ -47,10 +47,10 @@ rocks.register_sedimentary=reg
 --Conglomerate Weak   Localized continental, folded
 -->Limestone    Medium Localized continental, folded; primary oceanic, hills
 -->Coal         -      Large beds, twice as common in swamps
- reg("rocks:limestone",    { spread=64, height=32, treshold=0.36 })
+ reg("rocks:limestone",    { spread=64, height=32, treshold=0.35 })
  --reg("rocks:breccia",  { spread=64, height=32, treshold=0.6 })
  --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
- reg("default:stone_with_coal", { spread=48, height=14, treshold=0.40 })
+ reg("default:stone_with_coal", { spread=48, height=14, treshold=0.50 })
  reg("default:clay",{ spread=48, height=14, treshold=0.50 })
 
 minetest.register_on_generated(function(minp, maxp, seed)
