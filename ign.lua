@@ -3,6 +3,7 @@
 --
 
 local ign={
+ name="ign",
  top={
   offset = -10, scale = 0,
   spread = {x=80, y=80, z=80},
@@ -16,6 +17,8 @@ local ign={
  stats={ count=0, total=0, node={}, totalnodes=0 },
  debugging=nil
 }
+
+rocks.layer_initialize(ign)
 
 -- Basalt       Ex/Mafic   hard  same as diorite, byt limit=0.5
 minetest.register_node( "rocks:basalt", {  
@@ -58,10 +61,7 @@ rocks.register_igneous_stratus=reg
 -- vein stuff
 ign.veins={}
 
-local regv=function(name,param)
- rocksl.register_vein(ign.veins,name,param)
-end
-rocks.register_vein=regv
+local regv=rocks.register_vein
 
 rocks.register_vein("default:nyancat",{
   wherein={"rocks:granite"},
@@ -75,18 +75,5 @@ rocks.register_vein("default:nyancat",{
   }
   })
 
-
-minetest.register_on_generated(function(minp, maxp, seed)
- rocksl.layergen(ign,minp,maxp,seed)
- rocksl.veingen(ign.veins,minp,maxp,seed)
-end)
-
-minetest.register_on_shutdown(function()
- if (ign.stats.count==0) then rocksl.print("[rocks](ign) stats not available, no chunks generated") return end
- rocksl.print("[rocks](ign) generated total "..ign.stats.count.." chunks in "..ign.stats.total.." seconds ("..(ign.stats.total/ign.stats.count).." seconds per "..ign.stats.side.."^3 chunk)")
- for name,total in pairs(ign.stats.node) do
-  rocksl.print("[rocks](ign) "..name..": "..total.." nodes placed ("..(total*100)/(ign.stats.totalnodes).." %)")
- end
-end)
 
 -- ~ Tomas Brod

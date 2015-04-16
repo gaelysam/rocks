@@ -3,7 +3,7 @@
 --
 
 local print2=function(text)
- minetest.log("verbose","rocks/gen/ "..text)
+ minetest.log("info","rocks/gen/ "..text)
 end
 
 rocksl.seedseq=0
@@ -11,6 +11,13 @@ rocksl.GetNextSeed=function()
  rocksl.seedseq=rocksl.seedseq+20
  print2("seed "..rocksl.seedseq)
  return rocksl.seedseq
+end
+
+local layers={}
+
+rocks.layer_initialize=function(layer)
+ layer.stats={ count=0, total=0, node={}, totalnodes=0 }
+ table.insert(layers,layer)
 end
 
 rocksl.register_stratus=function(layer,name,param)
@@ -25,7 +32,9 @@ rocksl.register_stratus=function(layer,name,param)
  layer.stats.node[name]=0
 end
 
-rocksl.register_vein=function(col,name,param)
+local veins={}
+
+rocks.register_vein=function(name,param)
  local d={
    primary=name,
    wherein=param.wherein,
@@ -35,7 +44,7 @@ rocksl.register_vein=function(col,name,param)
    rarity=param.rarity,
    secondary=(param.ores or {}),
   }
- table.insert(col,d)
+ table.insert(veins,d)
 end
 
 -- TODO: rewrite above function to register normal minetest ore, with
@@ -198,5 +207,24 @@ rocksl.veingen=function(veins,minp,maxp,seed)
   --print("end veingen (nothin generated)")
  end
 end
+
+minetest.register_on_generated(function(minp, maxp, seed)
+ for _,layer in pairs(layers) do rocksl.layergen(layer,minp,maxp,seed) end
+ rocksl.veingen(veins,minp,maxp,seed)
+end)
+
+minetest.register_on_shutdown(function()
+ for _,ign in pairs(layers) do
+  print("[rocks] Stats for layer "..ign.name)
+  if (ign.stats.count==0) then
+   print("[rocks] |- stats not available, no chunks generated")
+  else
+   print("[rocks] |- generated total "..ign.stats.count.." chunks in "..ign.stats.total.." seconds ("..(ign.stats.total/ign.stats.count).." seconds per "..ign.stats.side.."^3 chunk)")
+   for name,total in pairs(ign.stats.node) do
+    print("[rocks] |-  "..name..": "..total.." nodes placed ("..(total*100)/(ign.stats.totalnodes).." %)")
+   end
+  end
+ end
+end)
 
 -- ~ Tomas Brod

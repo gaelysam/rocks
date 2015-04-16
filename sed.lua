@@ -3,6 +3,7 @@
 --
 
 local sed={
+ name="sed",
  top={
   offset = 20, scale = 0,
   spread = {x=80, y=80, z=80},
@@ -16,6 +17,8 @@ local sed={
  stats={ count=0, total=0, node={}, totalnodes=0 },
  debugging=nil
 }
+
+rocks.layer_initialize(sed)
 
 -- Mudstone     Sed        soft  Ocean, beach, river, glaciers
 minetest.register_node( "rocks:mudstone", {  
@@ -52,17 +55,5 @@ rocks.register_sedimentary=reg
  --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
  reg("default:stone_with_coal", { spread=48, height=14, treshold=0.50 })
  reg("default:clay",{ spread=48, height=14, treshold=0.50 })
-
-minetest.register_on_generated(function(minp, maxp, seed)
- rocksl.layergen(sed,minp,maxp,seed)
-end)
-
-minetest.register_on_shutdown(function()
- if (sed.stats.count==0) then rocksl.print("[rocks](sed) stats not available, no chunks generated") return end
- rocksl.print("[rocks](sed) generated total "..sed.stats.count.." chunks in "..sed.stats.total.." seconds ("..(sed.stats.total/sed.stats.count).." seconds per "..sed.stats.side.."^3 chunk)")
- for name,total in pairs(sed.stats.node) do
-  rocksl.print("[rocks](sed) "..name..": "..total.." nodes placed ("..(total*100)/(sed.stats.totalnodes).." %)")
- end
-end)
 
 -- ~ Tomas Brod
