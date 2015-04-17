@@ -4,14 +4,12 @@ Geological layer generator for [Minetest] "rocks"
 Aim of this mod is to replace all generic stone (default:stone) and 
 generate underground layers of different rocks.
 
-Currently everithing generated above ground, in air. This is for debugging.
-
 Features
 --------
 
 * layers of different rocks: sort of working
-* ore veins: nothing
-* extensibility, api: ok
+* ore veins: being added
+* extensibility, api: changed million times
 
 ** Work in progress! **
 
@@ -21,9 +19,14 @@ Features
 Screenshots
 -----------
 
-* Layers: ![sample of layers](layers0.png)
-* Coal pane: ![large coal deposit](coal-pane0.png)
-* Vein: ![sample of generated vein](vein0.png)
+all were out of date
+
+License
+-------
+
+* My Code: GNU General Public License v2 or higher.
+* Media: see txt files in the texture folder
+* stated in the corresponding file
 
 Documentation
 -------------
