@@ -13,15 +13,20 @@ rocks={}
 rocksl={}
 
 rocksl.print=function(text)
- print("[rocks] "..text)
+ minetest.log("info","/rocks "..text)
+end
+
+rocksl.seedseq=0
+rocksl.GetNextSeed=function()
+ rocksl.seedseq=rocksl.seedseq+20
+ return rocksl.seedseq
 end
 
 local modpath=minetest.get_modpath(minetest.get_current_modname())
 
-dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/sed.lua")
-dofile(modpath.."/ign.lua")
-dofile(modpath.."/skarn.lua")
+--dofile(modpath.."/ign.lua")
+--dofile(modpath.."/skarn.lua")
 
 minetest.register_on_mapgen_init(function(mapgen_params)
  -- todo: disable caves and ores

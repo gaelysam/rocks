@@ -2,24 +2,6 @@
 -- Sedimentary Layer
 --
 
-local sed={
- name="sed",
- top={
-  offset = 20, scale = 0,
-  spread = {x=80, y=80, z=80},
-  octaves = 0, persist = 0 },
- bot={
-  offset = -16, scale = 10, seed=rocksl.GetNextSeed(),
-  spread = {x=80, y=80, z=80},
-  octaves = 2, persist = 0.7 },
- primary={ name="rocks:mudstone" },
- localized={},
- stats={ count=0, total=0, node={}, totalnodes=0 },
- debugging=nil
-}
-
-rocks.layer_initialize(sed)
-
 -- Mudstone     Sed        soft  Ocean, beach, river, glaciers
 minetest.register_node( "rocks:mudstone", {  
 	description = S("Mudstone"),
@@ -27,6 +9,26 @@ minetest.register_node( "rocks:mudstone", {
 	groups = {cracky=1, crumbly=3}, 
 	is_ground_content = true, sounds = default.node_sound_dirt_defaults(),
 })
+
+do -- Modify default grassland biome
+ local grassland=minetest.registered_biomes["default:grassland"] or
+  {
+   name = "rocks:grassland",
+   node_top = "default:dirt_with_grass",
+   depth_top = 1,
+   y_min = 5,
+   y_max = 31000,
+   heat_point = 50,
+   humidity_point = 50,
+  }
+ grassland.node_filler="rocks:mudstone"
+ grassland.depth_filler=11
+ minetest.clear_registered_biomes()
+ minetest.register_biome(grassland)
+end
+
+-- more biomes
+
 
 -- more rock defs
 minetest.register_node( "rocks:limestone", {  
@@ -38,7 +40,24 @@ minetest.register_node( "rocks:limestone", {
 
 
 local reg=function(name,param)
- rocksl.register_stratus(sed,name,param)
+ minetest.register_ore({
+  ore=name,
+  wherein= { 
+         "rocks:mudstone",
+         },
+  ore_type         = "scatter",
+  clust_scarcity   = 1,
+  clust_size       = 3,
+  clust_num_ores   = 27,
+  y_min            = -20,
+  y_max            = 40,
+  noise_threshhold = param.treshold,
+  noise_params     = {
+          offset=0, scale=1, octaves=3, persist=0.3,
+          spread={x=param.spread, y=param.height, z=param.spread},
+          seed=rocksl.GetNextSeed(),
+                     },
+ })
 end
 
 rocks.register_sedimentary=reg
@@ -50,10 +69,10 @@ rocks.register_sedimentary=reg
 --Conglomerate Weak   Localized continental, folded
 -->Limestone    Medium Localized continental, folded; primary oceanic, hills
 -->Coal         -      Large beds, twice as common in swamps
- reg("rocks:limestone",    { spread=64, height=32, treshold=0.35 })
+ --reg("rocks:limestone",    { spread=64, height=32, treshold=0.35 })
  --reg("rocks:breccia",  { spread=64, height=32, treshold=0.6 })
  --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
- reg("default:stone_with_coal", { spread=48, height=14, treshold=0.50 })
- reg("default:clay",{ spread=48, height=14, treshold=0.50 })
+ reg("default:stone_with_coal", { spread=64, height=14, treshold=0.60 })
+ reg("default:clay",{ spread=48, height=14, treshold=0.56 })
 
 -- ~ Tomas Brod
