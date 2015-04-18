@@ -10,24 +10,70 @@ minetest.register_node( "rocks:mudstone", {
 	is_ground_content = true, sounds = default.node_sound_dirt_defaults(),
 })
 
-do -- Modify default grassland biome
+local beach_max=4
+local lowland_max=21
+local highland_max=60
+local beach_min=-7
+local lowland_min=5
+local highland_min=22
+
+do
+ -- Modify default grassland biome
  local grassland=minetest.registered_biomes["default:grassland"] or
-  {
+  { -- default biome, if no biome mod is installed
    name = "rocks:grassland",
    node_top = "default:dirt_with_grass",
    depth_top = 1,
-   y_min = 5,
-   y_max = 31000,
+   y_min = lowland_min,
+   y_max = lowland_max,
    heat_point = 50,
    humidity_point = 50,
   }
- grassland.node_filler="rocks:mudstone"
- grassland.depth_filler=11
+  -- The biome layers are: dust, top, filler, stone
+  -- On beach: dust, shore_top, shore_filler, underwater
+  -- coastside: dust, top, filler, shore_filler, underwater, stone
+ if #minetest.registered_biomes > 1 then
+  minetest.log("error","Biomes registered before [rocks] discarded, please depend the mod on 'rocks' to fix this.")
+  -- can't just re-register them here, cause clear_biomes also clears decorations
+ end
  minetest.clear_registered_biomes()
+ -- hook to inject our sedimentary stone to new biomes
+ local old_register_biome=minetest.register_biome
+ minetest.register_biome=function(def)
+  print("[rocks] register_biome .name="..def.name)
+  for n,v in pairs(def) do
+   --if type(v)~="table" then print("   "..n.."="..v) end
+  end
+  local cor=false -- was the biomeheight patched?
+  local tl=3 -- tolerance  in determining biome type based on y_min/max values
+  local btype -- biome type (:string)
+  if (def.y_max>3000) and (def.y_min<=highland_min)  then
+   -- correct upper boundary of registered bimes
+   if (def.y_min<10) and (def.y_min>0) then def.y_max=lowland_max cor=true end
+   if (def.y_min<30) and (def.y_min>10) then def.y_max=highland_max cor=true end
+   minetest.log("action","/rocks correcting upper bound on biome "..def.name.." to "..def.y_max)
+  end
+  -- actual detection code
+  if def.node_stone=="default:desert_stone" then btype="desert"
+  elseif (def.y_min>beach_min-tl) and (def.y_max<beach_max+tl) then btype="beach"
+  elseif (def.y_min>0) and (def.y_max<lowland_max+tl) then btype="lowland"
+  elseif (def.y_min>highland_min-tl) and (def.y_max<highland_max+tl) then btype="highland"
+  elseif (def.y_min<-3000) and (def.y_max<lowland_min+tl) then btype="ocean"
+  else minetest.log("error", "/rocks could not guess elevation type for biome "..def.name) end
+  -- patch the new biomes with our rocks
+  if btype=="lowland" then
+   def.node_filler="rocks:mudstone"
+   def.depth_filler=11
+  end
+  -- and call the saved method to actually do the registration
+  old_register_biome(def)
+ end 
+ --now register the default grassland
  minetest.register_biome(grassland)
 end
 
 -- more biomes
+ -- todo: mountains, alps, volcanos
 
 
 -- more rock defs
@@ -60,7 +106,10 @@ local reg=function(name,param)
  })
 end
 
+-- this does register a new sedimentary vein.
 rocks.register_sedimentary=reg
+
+-- follows the only thing remaining from old ver :)
 
 --               Sedimentary rock hardness and distribution
 --    Rock      Hard                      Distribution
