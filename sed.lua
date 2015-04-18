@@ -40,7 +40,7 @@ do
  -- hook to inject our sedimentary stone to new biomes
  local old_register_biome=minetest.register_biome
  minetest.register_biome=function(def)
-  print("[rocks] register_biome .name="..def.name)
+  --print("[rocks] register_biome .name="..def.name)
   for n,v in pairs(def) do
    --if type(v)~="table" then print("   "..n.."="..v) end
   end
@@ -60,6 +60,7 @@ do
   elseif (def.y_min>highland_min-tl) and (def.y_max<highland_max+tl) then btype="highland"
   elseif (def.y_min<-3000) and (def.y_max<lowland_min+tl) then btype="ocean"
   else minetest.log("error", "/rocks could not guess elevation type for biome "..def.name) end
+  rocksl.print("/rocks register_biome .name="..def.name.." -> btype="..btype)
   -- patch the new biomes with our rocks
   if btype=="lowland" then
    def.node_filler="rocks:mudstone"
@@ -74,7 +75,7 @@ do
   end
   -- and call the saved method to actually do the registration
   old_register_biome(def)
- end 
+ end
  --now register the default grassland
  minetest.register_biome(grassland)
 end
