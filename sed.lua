@@ -65,6 +65,13 @@ do
    def.node_filler="rocks:mudstone"
    def.depth_filler=11
   end
+  -- deactivate the added and removed shore-thing of MGv7
+  -- to fix weirid sand layers underground
+  if btype=="lowland" then -- fixme: does this affect beach/ocean too?
+   def.node_shore_top=def.node_top
+   def.node_shore_filler=def.node_filler
+   def.node_underwater=def.node_filler
+  end
   -- and call the saved method to actually do the registration
   old_register_biome(def)
  end 
