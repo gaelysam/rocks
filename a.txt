@@ -34,3 +34,35 @@ Documentation
 How the underground is generated: *todo*.
 
 Mod has been rewritten, so no doc yet.
+
+The sedimentary layer
+-------------
+
+Is implemented by modifiing MGv7 biomes to use rocks's sedimentary rocks. 
+This means that you need mapgen v7 enabled. I also suggest enabling caves 
+and dungeons, as they are cool. 
+
+This mod nor minetest_game/default however do not define meaningful biomes. 
+So if you do not want unlimited grassland I suggest installing the 
+[Paramat's biomesdev mod](https://github.com/paramat/biomesdev) and adding 
+"rocks?" to depends.txt file inside the biomesdev folder. This is needed, 
+becouse "rock" overrides the standard biome registration callback to patch 
+in it's own sedimentary rocks.
+
+Soil is normlly 50-70 cm deep in real life, so I made soil (dirt) only 1 
+block thick. Under this thin layer of dirt an sedimentary layer is located. 
+In RL, there is clay and other stuff.
+
+Currently 2 sedimentary formations exists:
+
+### Coal
+
+Large panes of coal spawn directly under grass. But be warned, they are 
+really large and not-so-common. Best strategy is to follow rivers (MGv7 
+ridges) or randomly walk around and dig 2 block hole to see if coal is 
+there.
+
+### Clay
+
+Spawn simillary to coal, but not as large.
+
