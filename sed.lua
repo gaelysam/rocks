@@ -9,13 +9,20 @@ minetest.register_node( "rocks:mudstone", {
 	groups = {cracky=1, crumbly=3}, 
 	is_ground_content = true, sounds = default.node_sound_dirt_defaults(),
 })
+-- more rock defs
+minetest.register_node( "rocks:limestone", {  
+	description = S("Limestone"),
+	tiles = { "rocks_Limestone.png" },
+	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
+	groups = {cracky=2},
+})
 
 local beach_max=4
-local lowland_max=21
-local highland_max=60
+local lowland_max=27
+local highland_max=200
 local beach_min=-7
 local lowland_min=5
-local highland_min=22
+local highland_min=28
 
 do
  -- Modify default grassland biome
@@ -28,6 +35,18 @@ do
    y_max = lowland_max,
    heat_point = 50,
    humidity_point = 50,
+  }
+  local mountains={ -- default mountain biome
+                name = "rocks:mountain",
+                node_top = "default:dirt_with_grass",
+                depth_top = 1,
+                node_filler = "default:dirt",
+                depth_filler = 2,
+                node_stone = nil,
+                y_min = highland_min,
+                y_max = highland_max,
+                heat_point = 50,
+                humidity_point = 50,
   }
   -- The biome layers are: dust, top, filler, stone
   -- On beach: dust, shore_top, shore_filler, underwater
@@ -65,6 +84,10 @@ do
   if btype=="lowland" then
    def.node_filler="rocks:mudstone"
    def.depth_filler=11
+  elseif btype=="highland" then
+   def.node_filler="rocks:limestone"
+   def.node_stone="rocks:limestone"
+   def.depth_filler=15
   end
   -- deactivate the added and removed shore-thing of MGv7
   -- to fix weirid sand layers underground
@@ -78,19 +101,20 @@ do
  end
  --now register the default grassland
  minetest.register_biome(grassland)
+ -- create a default mountain biome...
+ minetest.register_biome(mountains)
+ -- hook the clear callback (fix biomesdev)
+ local old_clear=minetest.clear_registered_biomes
+ minetest.clear_registered_biomes=function()
+  old_clear()
+  minetest.log("action","/rocks re-registering default mountain biome!")
+  minetest.register_biome(mountains)
+ end
 end
 
 -- more biomes
  -- todo: mountains, alps, volcanos
 
-
--- more rock defs
-minetest.register_node( "rocks:limestone", {  
-	description = S("Limestone"),
-	tiles = { "rocks_Limestone.png" },
-	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
-	groups = {cracky=2},
-})
 
 
 local reg=function(name,param)
