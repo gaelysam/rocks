@@ -79,7 +79,7 @@ do
   elseif (def.y_min>highland_min-tl) and (def.y_max<highland_max+tl) then btype="highland"
   elseif (def.y_min<-3000) and (def.y_max<lowland_min+tl) then btype="ocean"
   else minetest.log("error", "/rocks could not guess elevation type for biome "..def.name) end
-  rocksl.print("/rocks register_biome .name="..def.name.." -> btype="..btype)
+  rocksl.print("register_biome .name="..def.name.." -> btype="..btype)
   -- patch the new biomes with our rocks
   if btype=="lowland" then
    def.node_filler="rocks:mudstone"
@@ -153,7 +153,7 @@ rocks.register_sedimentary=reg
  --reg("rocks:limestone",    { spread=64, height=32, treshold=0.35 })
  --reg("rocks:breccia",  { spread=64, height=32, treshold=0.6 })
  --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
- reg("default:stone_with_coal", { spread=64, height=14, treshold=0.60 })
- reg("default:clay",{ spread=48, height=14, treshold=0.56 })
+ reg("default:stone_with_coal", { spread=64, height=14, treshold=0.58 })
+ reg("default:clay",{ spread=48, height=14, treshold=0.55 })
 
 -- ~ Tomas Brod
