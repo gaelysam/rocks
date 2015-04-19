@@ -2,7 +2,7 @@
 -- Skarn deposit
 --
 
-local CommonRarity=70 --too high... should be like 76
+local CommonRarity=40 --too high... should be like 76
 local CommonRadius=10
 local CommonWherein={ "rocks:granite", "rocks:limestone" }
 
@@ -12,6 +12,20 @@ minetest.register_node( "rocks:skarn", {
 	groups = {cracky=3, stone=1}, 
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
+
+-- skarn deposit
+rocks.register_vein("rocks:skarn",{
+  wherein=CommonWherein,
+  miny=-160, maxy=20,
+  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
+  density=80, rarity=CommonRarity,
+ })
+
+local function GetNoiseParams()
+ return {
+  scale=1, offset=0, seed=rocksl.GetNextSeed(), octaves=1, persist=1,
+  spread={ x=100, y=100, z=100 } }
+end
 
 -- ores have to be redefined for skarn background
 
@@ -36,19 +50,24 @@ minetest.register_node( "rocks:skarn_malachyte", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Chalcopyrite/Malachyte skarn mix
-rocks.register_vein("rocks:skarn",{
-  wherein=CommonWherein,
-  miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
-  density=80, rarity=CommonRarity,
-  ores={
-   -- marble and hornfels, as well as unchanged limestone.
-   -- { ore="rocks:marble", percent=10 },
-   -- { ore="rocks:hornfels", percent=10 },
-    { ore="rocks:skarn_chalcopyrite", percent=30 },
-    { ore="rocks:skarn_malachyte", percent=15 },
-   -- { ore="rocks:skarn_molybdenite", percent=5 },
-  }
+rocksl.CopperNoise=GetNoiseParams()
+minetest.register_ore({
+ wherein="rocks:skarn",
+ ore="rocks:skarn_chalcopyrite",
+ clust_size=3,
+ clust_num_ores=11,
+ clust_scarcity=4^3,
+ noise_treshold=0.3,
+ noise_params=rocksl.CopperNoise
+ })
+minetest.register_ore({
+ wherein="rocks:skarn",
+ ore="rocks:skarn_malachyte",
+ clust_size=3,
+ clust_num_ores=11,
+ clust_scarcity=4^3,
+ noise_treshold=0.3,
+ noise_params=rocksl.CopperNoise
  })
 
 -- Sphalerite
@@ -66,19 +85,11 @@ minetest.register_node( "rocks:skarn_galena", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Pb Zn skarn mix
-rocks.register_vein("rocks:skarn",{
-  wherein=CommonWherein,
-  miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
-  density=80, rarity=CommonRarity,
-  ores={
    -- marble and hornfels, as well as unchanged limestone.
    -- { ore="rocks:marble", percent=10 },
    -- { ore="rocks:hornfels", percent=10 },
-    { ore="rocks:skarn_galena", percent=25 },
-    { ore="rocks:skarn_sphalerite", percent=25 },
-  }
- })
+   -- { ore="rocks:skarn_galena", percent=25 },
+   -- { ore="rocks:skarn_sphalerite", percent=25 },
 
 -- Magnetite
 minetest.register_node( "rocks:skarn_magnetite", {  
@@ -88,18 +99,10 @@ minetest.register_node( "rocks:skarn_magnetite", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Fe skarn mix
-rocks.register_vein("rocks:skarn",{
-  wherein=CommonWherein,
-  miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
-  density=80, rarity=CommonRarity,
-  ores={
    -- marble and hornfels, as well as unchanged limestone.
    -- { ore="rocks:marble", percent=10 },
    -- { ore="rocks:hornfels", percent=10 },
-    { ore="rocks:skarn_magnetite", percent=40 },
-  }
- })
+   -- { ore="rocks:skarn_magnetite", percent=40 },
 
 -- Magnesite
 minetest.register_node( "rocks:skarn_magnesite", {
@@ -116,18 +119,10 @@ minetest.register_node( "rocks:vermiculite", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- magnesite/vermiculite skarn mix
-rocks.register_vein("rocks:skarn",{
-  wherein=CommonWherein,
-  miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
-  density=80, rarity=CommonRarity,
-  ores={
    -- marble and hornfels, as well as unchanged limestone.
    -- { ore="rocks:marble", percent=10 },
    -- { ore="rocks:hornfels", percent=10 },
-    { ore="rocks:skarn_magnesite", percent=30 },
-    { ore="rocks:vermiculite", percent=20 },
-  }
- })
+   -- { ore="rocks:skarn_magnesite", percent=30 },
+   -- { ore="rocks:vermiculite", percent=20 },
 
 -- ~ Tomas Brod
