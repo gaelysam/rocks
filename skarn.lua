@@ -16,7 +16,7 @@ minetest.register_node( "rocks:skarn", {
 -- skarn deposit
 rocks.register_vein("rocks:skarn",{
   wherein=CommonWherein,
-  miny=-160, maxy=20,
+  miny=-320, maxy=300,
   radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
   density=80, rarity=CommonRarity,
  })
@@ -55,9 +55,9 @@ minetest.register_ore({
  wherein="rocks:skarn",
  ore="rocks:skarn_chalcopyrite",
  clust_size=3,
- clust_num_ores=11,
+ clust_num_ores=12,
  clust_scarcity=4^3,
- noise_treshold=0.3,
+ noise_treshold=0.333,
  noise_params=rocksl.CopperNoise
  })
 minetest.register_ore({
@@ -66,7 +66,7 @@ minetest.register_ore({
  clust_size=3,
  clust_num_ores=11,
  clust_scarcity=4^3,
- noise_treshold=0.3,
+ noise_treshold=0.333,
  noise_params=rocksl.CopperNoise
  })
 
@@ -85,6 +85,25 @@ minetest.register_node( "rocks:skarn_galena", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Pb Zn skarn mix
+rocksl.PbZnNoise=GetNoiseParams()
+minetest.register_ore({
+ wherein="rocks:skarn",
+ ore="rocks:skarn_sphalerite",
+ clust_size=3,
+ clust_num_ores=9,
+ clust_scarcity=4^3,
+ noise_treshold=0.38,
+ noise_params=rocksl.PbZnNoise
+ })
+minetest.register_ore({
+ wherein="rocks:skarn",
+ ore="rocks:skarn_galena",
+ clust_size=3,
+ clust_num_ores=10,
+ clust_scarcity=4^3,
+ noise_treshold=0.38,
+ noise_params=rocksl.PbZnNoise
+ })
    -- marble and hornfels, as well as unchanged limestone.
    -- { ore="rocks:marble", percent=10 },
    -- { ore="rocks:hornfels", percent=10 },
@@ -99,6 +118,16 @@ minetest.register_node( "rocks:skarn_magnetite", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Fe skarn mix
+rocksl.IronNoise=GetNoiseParams()
+minetest.register_ore({
+ wherein="rocks:skarn",
+ ore="rocks:skarn_magnetite",
+ clust_size=3,
+ clust_num_ores=13,
+ clust_scarcity=4^3,
+ noise_treshold=0.3,
+ noise_params=rocksl.IronNoise
+ })
    -- marble and hornfels, as well as unchanged limestone.
    -- { ore="rocks:marble", percent=10 },
    -- { ore="rocks:hornfels", percent=10 },
