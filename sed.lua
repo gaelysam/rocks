@@ -29,7 +29,7 @@ do
  local grassland=minetest.registered_biomes["default:grassland"] or
   { -- default biome, if no biome mod is installed
    name = "rocks:grassland",
-   node_top = "default:dirt_with_grass",
+   node_top = "air",
    depth_top = 1,
    y_min = lowland_min,
    y_max = lowland_max,
@@ -124,14 +124,14 @@ local reg=function(name,param)
          "rocks:mudstone",
          },
   ore_type         = "scatter",
-  clust_scarcity   = 1,
-  clust_size       = 3,
-  clust_num_ores   = 27,
+  clust_scarcity   = 8^3,
+  clust_size       = 10,
+  clust_num_ores   = 10^3,
   y_min            = -20,
   y_max            = 40,
   noise_threshhold = param.treshold,
   noise_params     = {
-          offset=0, scale=1, octaves=3, persist=0.3,
+          offset=0, scale=1, octaves=1, persist=0.3,
           spread={x=param.spread, y=param.height, z=param.spread},
           seed=rocksl.GetNextSeed(),
                      },
