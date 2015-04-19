@@ -2,7 +2,7 @@
 -- Skarn deposit
 --
 
-local CommonRarity=0.02 --too high... should be like 0.013
+local CommonRarity=70 --too high... should be like 76
 local CommonRadius=10
 local CommonWherein={ "rocks:granite", "rocks:limestone" }
 
@@ -39,7 +39,7 @@ minetest.register_node( "rocks:skarn_malachyte", {
 rocks.register_vein("rocks:skarn",{
   wherein=CommonWherein,
   miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=3, frequency=5 },
+  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
   density=80, rarity=CommonRarity,
   ores={
    -- marble and hornfels, as well as unchanged limestone.
@@ -69,7 +69,7 @@ minetest.register_node( "rocks:skarn_galena", {
 rocks.register_vein("rocks:skarn",{
   wherein=CommonWherein,
   miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=3, frequency=5 },
+  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
   density=80, rarity=CommonRarity,
   ores={
    -- marble and hornfels, as well as unchanged limestone.
@@ -91,7 +91,7 @@ minetest.register_node( "rocks:skarn_magnetite", {
 rocks.register_vein("rocks:skarn",{
   wherein=CommonWherein,
   miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=3, frequency=5 },
+  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
   density=80, rarity=CommonRarity,
   ores={
    -- marble and hornfels, as well as unchanged limestone.
@@ -119,7 +119,7 @@ minetest.register_node( "rocks:vermiculite", {
 rocks.register_vein("rocks:skarn",{
   wherein=CommonWherein,
   miny=-160, maxy=20,
-  radius={ average=CommonRadius, amplitude=3, frequency=5 },
+  radius={ average=CommonRadius, amplitude=0.16, frequency=8 },
   density=80, rarity=CommonRarity,
   ores={
    -- marble and hornfels, as well as unchanged limestone.

@@ -26,7 +26,7 @@ local modpath=minetest.get_modpath(minetest.get_current_modname())
 
 dofile(modpath.."/sed.lua")
 dofile(modpath.."/ign.lua")
---dofile(modpath.."/skarn.lua")
+dofile(modpath.."/skarn.lua")
 
 minetest.register_on_mapgen_init(function(mapgen_params)
  -- todo: disable caves and ores
