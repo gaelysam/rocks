@@ -46,7 +46,7 @@ local reg=function(name,param)
    height_max     = 28,
    noise_treshhold=param.treshold,
    noise_params={
-          offset = 0, scale = 1, octaves = 2, persist = 0.5,
+          offset = 0, scale = 1, octaves = 1, persist = 0.5,
           spread = {x=param.spread, y=param.height, z=param.spread},
           seed=rocksl.GetNextSeed(),
         },
@@ -55,8 +55,8 @@ end
 rocks.register_igneous_stratus=reg
 
 -- rock registration
- reg("rocks:granite", { spread=40, height=32, treshold=0.06})
- reg("rocks:diorite", { spread=40, height=32, treshold=0.23})
+ reg("rocks:granite", { spread=40, height=32, treshold=0.08})
+ reg("rocks:diorite", { spread=40, height=32, treshold=0.24})
  reg("rocks:gabbro",  { spread=40, height=32, treshold=0.36})
 
 -- vein stuff
