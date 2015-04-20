@@ -89,7 +89,7 @@ do
    def.node_stone="rocks:limestone"
    def.depth_filler=15
   end
-  if (def.node_stone=="default:stone") or (not def.node_stone) then def.node_stone="mapgen_stone" end
+  if (def.node_stone=="default:stone") or (not def.node_stone) then def.node_stone="rocks:basalt" end
   -- deactivate the added and removed shore-thing of MGv7
   -- to fix weirid sand layers underground
   if btype=="lowland" then -- fixme: does this affect beach/ocean too?

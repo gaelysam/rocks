@@ -22,6 +22,8 @@ rocksl.GetNextSeed=function()
  return rocksl.seedseq
 end
 
+minetest.clear_registered_ores()
+
 local modpath=minetest.get_modpath(minetest.get_current_modname())
 
 dofile(modpath.."/sed.lua")
