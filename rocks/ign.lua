@@ -37,13 +37,13 @@ minetest.register_node( "rocks:gabbro", {
 local reg=function(name,param)
  minetest.register_ore({
    ore    = name,
-   wherein= { "mapgen_stone" },
+   wherein= { "mapgen_stone", "default:stone", "rocks:basalt" },
    ore_type       = "scatter",
    clust_scarcity = 10^3,
    clust_num_ores = 20^3,
    clust_size     = 20,
    height_min     = -31000,
-   height_max     = -5,
+   height_max     = 28,
    noise_treshhold=param.treshold,
    noise_params={
           offset = 0, scale = 1, octaves = 3, persist = 0.5,
