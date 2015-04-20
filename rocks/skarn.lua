@@ -4,7 +4,7 @@
 
 local CommonRarity=40 --too high... should be like 76
 local CommonRadius=10
-local CommonWherein={ "rocks:granite", "rocks:limestone" }
+local CommonWherein={ "rocks:granite", "rocks:limestone", "air" }
 
 minetest.register_node( "rocks:skarn", {  
 	description = S("Skarn"),
