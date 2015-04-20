@@ -16,6 +16,13 @@ Features
 * git clone git://repo.or.cz/rocks.git ([show](http://repo.or.cz/rocks.git/))
 * (old) Git clone: [https](https://gitorious.org/mt/rocks.git)
 
+This mod nor minetest_game/default do not define meaningful biomes. 
+So if you do not want unlimited grassland I suggest installing the 
+[Paramat's biomesdev mod](https://github.com/paramat/biomesdev) and adding 
+"rocks?" to depends.txt file inside the biomesdev folder. This is needed, 
+becouse "rock" overrides the standard biome registration callback to patch 
+in it's own sedimentary rocks.
+
 Screenshots
 -----------
 
@@ -42,13 +49,6 @@ Is implemented by modifiing MGv7 biomes to use rocks's sedimentary rocks.
 This means that you need mapgen v7 enabled. I also suggest enabling caves 
 and dungeons, as they are cool. 
 
-This mod nor minetest_game/default however do not define meaningful biomes. 
-So if you do not want unlimited grassland I suggest installing the 
-[Paramat's biomesdev mod](https://github.com/paramat/biomesdev) and adding 
-"rocks?" to depends.txt file inside the biomesdev folder. This is needed, 
-becouse "rock" overrides the standard biome registration callback to patch 
-in it's own sedimentary rocks.
-
 Soil is normlly 50-70 cm deep in real life, so I made soil (dirt) only 1 
 block thick. Under this thin layer of dirt an sedimentary layer is located. 
 In RL, there is clay and other stuff.
@@ -66,3 +66,33 @@ there.
 
 Spawn simillary to coal, but not as large.
 
+The Igenous layer
+--------------
+
+Default stone is aliased to basalt, but for some reason the alias is not 
+working so please treat stone as basalt until I find way to fix it.
+
+Everything below sedimentary and (unimp) metamorphic layer is of igneous origin. Primary rock is basalt. But about half of basalt is replaced by granite. Some smaller fraction (like 20%) is then replaced by diorite and gabbro.
+These are the primary rocks, and more should come.
+
+### Mineral distribution
+
+Mineral ore is placed only in nodes of correct rock and only if the region 
+for the ore is right. These "mineral biomes" can and do overlap and change 
+every like 100 nodes. Following regions are defined:
+
+| Region  | minerals
+|---------|----------
+| Copper  | Chalcopyrite, Malachyte
+| Pb/Zn   | Sphalerite, Galena
+| Iron    | Magnetite
+
+### Skarn deposits
+
+Are larg-ish (15-20m) blobs of skarn stone. They spawn only in granite and 
+limestone. Copper, Lead, Zinc and Iron ores often enrich the skarn stone. 
+Some deposits may (unimp) contain considerable amounts of Molybenium, 
+Uranium and Wolfram ores.
+
+Concentration of the minerals is quite high, as to regard the player for 
+finding a not-so-common skarn vein.
