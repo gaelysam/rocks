@@ -46,7 +46,7 @@ local reg=function(name,param)
    height_max     = 28,
    noise_treshhold=param.treshold,
    noise_params={
-          offset = 0, scale = 1, octaves = 3, persist = 0.5,
+          offset = 0, scale = 1, octaves = 2, persist = 0.5,
           spread = {x=param.spread, y=param.height, z=param.spread},
           seed=rocksl.GetNextSeed(),
         },
@@ -62,7 +62,6 @@ rocks.register_igneous_stratus=reg
 -- vein stuff
 
 local regv=function(name,param)
- minetest.log("error","stub called, rocks.register_vein")
  minetest.register_ore({
    ore    = name,
    wherein= param.wherein,
