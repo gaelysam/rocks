@@ -96,3 +96,8 @@ Uranium and Wolfram ores.
 
 Concentration of the minerals is quite high, as to regard the player for 
 finding a not-so-common skarn vein.
+
+### Pegmatite veis
+
+Spawn only in granite. Are bit larger than skarn veins. Contain minerals 
+like skarn and more exotic minerals.
