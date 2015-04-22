@@ -88,11 +88,17 @@ do
    def.node_filler="rocks:limestone"
    def.node_stone="rocks:limestone"
    def.depth_filler=15
+  elseif btype=="beach" then
+   if def.heat_point<50 then
+    def.node_top="default:gravel"
+    def.node_filler="default:gravel"
+    def.depth_filler=2
+    def.y_min=beach_min
+   end
   end
   if (def.node_stone=="default:stone") or (not def.node_stone) then def.node_stone="rocks:basalt" end
-  -- deactivate the added and removed shore-thing of MGv7
-  -- to fix weirid sand layers underground
-  if btype=="lowland" then -- fixme: does this affect beach/ocean too?
+  do -- deactivate the added and removed shore-thing of MGv7
+   -- to fix weirid sand layers underground
    def.node_shore_top=def.node_top
    def.node_shore_filler=def.node_filler
    def.node_underwater=def.node_filler
@@ -156,19 +162,5 @@ rocks.register_sedimentary=reg
  --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
  reg("default:stone_with_coal", { spread=64, height=14, treshold=0.58 })
  reg("default:clay",{ spread=48, height=14, treshold=0.55 })
-
--- Pebbles
-
- minetest.register_ore({
-  ore="default:gravel",
-  wherein= { "default:sand" },
-  ore_type         = "scatter",
-  clust_scarcity   = 15^3,
-  clust_size       = 6,
-  clust_num_ores   = 5^3,
-  y_min            = -14,
-  y_max            = 5,
- })
-
 
 -- ~ Tomas Brod
