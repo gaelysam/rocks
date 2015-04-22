@@ -2,7 +2,7 @@
 -- Pegmatite vein
 --
 
-local CommonRarity=32
+local CommonRarity=45
 
 minetest.register_node( "rocks:pegmatite", {
 	description = S("Pegmatite"),
@@ -28,7 +28,7 @@ minetest.register_node( "rocks:pegmatite", {
 rocks.register_vein("rocks:pegmatite",{
   wherein={ "rocks:granite" },
   miny=-160, maxy=20,
-  radius={ average=14, amplitude=0.3, frequency=16 },
+  radius={ average=18, amplitude=0.3, frequency=16 },
   density=80, rarity=CommonRarity,
   ores={
   }
