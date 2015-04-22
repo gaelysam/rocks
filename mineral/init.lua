@@ -34,4 +34,5 @@ mineral.noise.Iron=GetNoiseParams()
 mineral.noise.Tin=GetNoiseParams()
 
 dofile(modpath.."/skarn.lua")
+dofile(modpath.."/pegmatite.lua")
 
