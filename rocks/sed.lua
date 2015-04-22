@@ -157,4 +157,18 @@ rocks.register_sedimentary=reg
  reg("default:stone_with_coal", { spread=64, height=14, treshold=0.58 })
  reg("default:clay",{ spread=48, height=14, treshold=0.55 })
 
+-- Pebbles
+
+ minetest.register_ore({
+  ore="default:gravel",
+  wherein= { "default:sand" },
+  ore_type         = "scatter",
+  clust_scarcity   = 15^3,
+  clust_size       = 6,
+  clust_num_ores   = 5^3,
+  y_min            = -14,
+  y_max            = 5,
+ })
+
+
 -- ~ Tomas Brod
