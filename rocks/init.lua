@@ -16,10 +16,9 @@ rocksl.print=function(text)
  minetest.log("info","/rocks "..text)
 end
 
-rocksl.seedseq=0
+rocksl.seedprng=PseudoRandom(763)
 rocksl.GetNextSeed=function()
- rocksl.seedseq=rocksl.seedseq+20
- return rocksl.seedseq
+ return rocksl.seedprng:next()
 end
 
 minetest.clear_registered_ores()
