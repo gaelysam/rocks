@@ -16,6 +16,12 @@ minetest.register_node( "rocks:limestone", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 	groups = {cracky=2},
 })
+minetest.register_node( "rocks:laterite", {
+	description = S("Laterite clay"),
+	tiles = { "rocks_laterite.png" },
+	is_ground_content = true, sounds = default.node_sound_dirt_defaults(),
+	groups = {crumbly=3},
+})
 
 local beach_max=4
 local lowland_max=27
@@ -95,9 +101,8 @@ do
     def.depth_filler=2
     def.y_min=beach_min
    elseif def.humidity_point>70 then
-    print("  dirt")
-    def.node_top="default:dirt"
-    def.depth_top=3
+    def.node_filler="rocks:laterite"
+    def.depth_top=0
    end
   end
   if (def.node_stone=="default:stone") or (not def.node_stone) then def.node_stone="rocks:basalt" end
