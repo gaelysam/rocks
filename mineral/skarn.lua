@@ -2,12 +2,6 @@
 -- Skarn deposit
 --
 
-local function GetNoiseParams()
- return {
-  scale=1, offset=0, seed=rocksl.GetNextSeed(), octaves=1, persist=1,
-  spread={ x=100, y=100, z=100 } }
-end
-
 -- ores have to be redefined for skarn background
 
 -- Chalcopyrite
@@ -25,7 +19,6 @@ minetest.register_node( "mineral:skarn_malachyte", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Chalcopyrite/Malachyte skarn mix
-mineral.noise.Copper=GetNoiseParams()
 minetest.register_ore({
  wherein="rocks:skarn",
  ore="mineral:skarn_chalcopyrite",
@@ -60,7 +53,6 @@ minetest.register_node( "mineral:skarn_galena", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Pb Zn skarn mix
-mineral.noise.PbZn=GetNoiseParams()
 minetest.register_ore({
  wherein="rocks:skarn",
  ore="mineral:skarn_sphalerite",
@@ -93,7 +85,6 @@ minetest.register_node( "mineral:skarn_magnetite", {
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 })
 -- Fe skarn mix
-mineral.noise.Iron=GetNoiseParams()
 minetest.register_ore({
  wherein="rocks:skarn",
  ore="mineral:skarn_magnetite",
