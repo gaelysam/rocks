@@ -65,8 +65,8 @@ rocks.register_igneous_stratus=reg
 
 -- continental (granite): diorite and gabbro
 -- oceanic (basalt): gabbro
- reg( "rocks:gabbro",  {spread=60, height=40, treshold=0.34, inr={"rocks:granite","rocks:basalt"} })
- reg( "rocks:diorite", {spread=60, height=40, treshold=0.24, inr={"rocks:granite"} })
+ reg( "rocks:gabbro",  {spread=80, height=60, treshold=0.36, inr={"rocks:granite","rocks:basalt"} })
+ reg( "rocks:diorite", {spread=80, height=60, treshold=0.25, inr={"rocks:granite"} })
 
 -- vein stuff
 
