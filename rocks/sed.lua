@@ -105,6 +105,10 @@ do
    elseif def.humidity_point>70 then
     def.node_filler="rocks:laterite"
     def.depth_top=0
+   elseif def.node_top=="default:sand" then
+    if def.depth_top<2 then def.depth_top=3 end
+    def.node_filler="default:sandstone"
+    def.depth_filler=5
    end
   elseif btype=="ocean" then
    def.node_stone="rocks:basalt"
