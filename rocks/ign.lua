@@ -44,7 +44,7 @@ local reg=function(name,param)
    clust_size     = 20,
    height_min     = -31000,
    height_max     = 28,
-   noise_treshhold=param.treshold,
+   noise_threshhold=param.treshold,
    noise_params={
           offset = 0, scale = 1, octaves = 1, persist = 0.5,
           spread = {x=param.spread, y=param.height, z=param.spread},
