@@ -37,7 +37,7 @@ minetest.register_node( "rocks:gabbro", {
 local reg=function(name,param)
  minetest.register_ore({
    ore    = name,
-   wherein= { "mapgen_stone", "default:stone", "rocks:basalt" },
+   wherein= param.inr,
    ore_type       = "scatter",
    clust_scarcity = 10^3,
    clust_num_ores = 20^3,
@@ -54,10 +54,10 @@ local reg=function(name,param)
 end
 rocks.register_igneous_stratus=reg
 
--- rock registration
- reg("rocks:granite", { spread=40, height=32, treshold=0.08})
- reg("rocks:diorite", { spread=40, height=32, treshold=0.24})
- reg("rocks:gabbro",  { spread=40, height=32, treshold=0.36})
+-- continental (granite): diorite and gabbro
+-- oceanic (basalt): gabbro
+ reg( "rocks:gabbro",  {spread=60, height=40, treshold=0.34, inr={"rocks:granite","rocks:basalt"} })
+ reg( "rocks:diorite", {spread=60, height=40, treshold=0.24, inr={"rocks:granite"} })
 
 -- vein stuff
 

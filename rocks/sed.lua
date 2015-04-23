@@ -90,22 +90,25 @@ do
   if btype=="lowland" then
    def.node_filler="rocks:mudstone"
    def.depth_filler=11
+   def.node_stone="rocks:granite"
   elseif btype=="highland" then
    def.node_filler="rocks:limestone"
    def.node_stone="rocks:limestone"
    def.depth_filler=15
   elseif btype=="beach" then
+   def.node_stone="rocks:granite"
+   def.y_min=beach_min
    if def.heat_point<50 then
     def.node_top="default:gravel"
     def.node_filler="default:gravel"
     def.depth_filler=2
-    def.y_min=beach_min
    elseif def.humidity_point>70 then
     def.node_filler="rocks:laterite"
     def.depth_top=0
    end
+  elseif btype=="ocean" then
+   def.node_stone="rocks:basalt"
   end
-  if (def.node_stone=="default:stone") or (not def.node_stone) then def.node_stone="rocks:basalt" end
   do -- deactivate the added and removed shore-thing of MGv7
    -- to fix weirid sand layers underground
    def.node_shore_top=def.node_top
