@@ -17,7 +17,7 @@ minetest.register_alias("mapgen_stone", "rocks:basalt")
 -- more rock defs
 minetest.register_node( "rocks:granite", {  
 	description = S("Granite"),
-	tiles = { "rocks_Granite.png" },
+	tiles = { "rocks_wgr.png" },
 	is_ground_content = true, sounds = default.node_sound_stone_defaults(),
 	groups = {cracky=3, stone=1}, 
 })
