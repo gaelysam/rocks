@@ -60,7 +60,7 @@ rocks.register_igneous_stratus=reg
  minetest.register_ore({
   ore="rocks:granite", wherein="default:stone",
   ore_type="scatter", clust_scarcity=3^3, clust_num_ores=6^3, clust_size=6,
-  height_min=-31000, height_max=-49,
+  height_min=-31000, height_max=-31,
  })
 
 -- continental (granite): diorite and gabbro

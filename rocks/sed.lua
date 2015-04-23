@@ -117,7 +117,7 @@ do
    -- to fix weirid sand layers underground
    def.node_shore_top=def.node_top
    def.node_shore_filler=def.node_filler
-   def.node_underwater=def.node_filler
+   def.node_underwater=def.node_top
   end
   -- and call the saved method to actually do the registration
   old_register_biome(def)
