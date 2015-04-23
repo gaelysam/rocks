@@ -54,6 +54,15 @@ local reg=function(name,param)
 end
 rocks.register_igneous_stratus=reg
 
+-- add our rocks to stone, under -48 there are no biomes, so randomly choose.
+ reg( "rocks:basalt", {spread=60, height=40, treshold=0.43, inr={"default:stone"} })
+
+ minetest.register_ore({
+  ore="rocks:granite", wherein="default:stone",
+  ore_type="scatter", clust_scarcity=3^3, clust_num_ores=6^3, clust_size=6,
+  height_min=-31000, height_max=-49,
+ })
+
 -- continental (granite): diorite and gabbro
 -- oceanic (basalt): gabbro
  reg( "rocks:gabbro",  {spread=60, height=40, treshold=0.34, inr={"rocks:granite","rocks:basalt"} })
