@@ -91,6 +91,9 @@ do
    def.node_filler="rocks:mudstone"
    def.depth_filler=11
    def.node_stone="rocks:granite"
+   if (def.humidity_point>80) and (def.heat_point>80) then
+    def.node_filler="rocks:laterite"
+   end
   elseif btype=="highland" then
    def.node_filler="rocks:limestone"
    def.node_stone="rocks:limestone"
@@ -102,9 +105,6 @@ do
     def.node_top="default:gravel"
     def.node_filler="default:gravel"
     def.depth_filler=2
-   elseif def.humidity_point>70 then
-    def.node_filler="rocks:laterite"
-    def.depth_top=0
    elseif def.node_top=="default:sand" then
     if def.depth_top<2 then def.depth_top=3 end
     def.node_filler="default:sandstone"
