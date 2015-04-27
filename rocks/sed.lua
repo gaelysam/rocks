@@ -112,6 +112,8 @@ do
    end
   elseif btype=="ocean" then
    def.node_stone="rocks:basalt"
+   def.node_top="default:gravel"
+   def.node_filler="rocks:limestone"
   end
   do -- deactivate the added and removed shore-thing of MGv7
    -- to fix weirid sand layers underground
