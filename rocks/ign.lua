@@ -54,20 +54,6 @@ local reg=function(name,param)
 end
 rocks.register_igneous_stratus=reg
 
--- add our rocks to stone, under -48 there are no biomes, so randomly choose.
- reg( "rocks:basalt", {spread=60, height=40, treshold=0.43, inr={"default:stone"} })
-
- minetest.register_ore({
-  ore="rocks:granite", wherein="default:stone",
-  ore_type="scatter", clust_scarcity=3^3, clust_num_ores=6^3, clust_size=6,
-  height_min=-31000, height_max=-31,
- })
-
--- continental (granite): diorite and gabbro
--- oceanic (basalt): gabbro
- reg( "rocks:gabbro",  {spread=80, height=60, treshold=0.36, inr={"rocks:granite","rocks:basalt"} })
- reg( "rocks:diorite", {spread=80, height=60, treshold=0.25, inr={"rocks:granite"} })
-
 -- vein stuff
 
 local regv=function(name,param)
@@ -102,6 +88,70 @@ rocks.register_vein("default:nyancat",{
     { ore="default:dirt", percent=30 },
   }
   })
+
+local np_layer = {
+ offset = 0, octaves = 3, persist = 0.46,
+ scale = 30,
+ spread = {x=500, y=500, z=500},
+ seed = -5500,
+}
+local np_intr = {
+ octaves = 3, persist = 0.46,
+ scale = 20,
+ offset = -15,
+ spread = {x=100, y=100, z=100},
+ seed = 3740,
+}
+
+minetest.register_on_generated( function( minp, maxp, seed )
+ local t1 = os.clock()
+ local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
+ local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
+ local data = vm:get_data()
+
+ local chunksize = maxp.x - minp.x + 1
+ local pmapsize = {x = chunksize, y = chunksize, z = 1}
+ local pmapminpxz = {x = minp.x, y = minp.z}
+ local c_stone= minetest.get_content_id("default:stone")
+ local layers= { 
+             { min=-100, node="rocks:granite" },
+             { min=-240, node="rocks:diorite"},
+             { node="rocks:gabbro", min=-700},
+            }
+ for k,v in pairs(layers) do
+  v.ctx=minetest.get_content_id(v.node)
+ end
+ local layers_no=#layers
+ local n_layer= minetest.get_perlin_map(np_layer, pmapsize) : get2dMap_flat(pmapminpxz)
+ local n_intr= minetest.get_perlin_map(np_intr, pmapsize) : get2dMap_flat(pmapminpxz)
+ local nixz= 1
+ 
+ for z=minp.z, maxp.z do for x=minp.x, maxp.x do
+  -- loop
+  for y=minp.y, maxp.y do
+   local di=area:index(x,y,z)
+   local yn=y+n_layer[nixz]
+   local vintr=n_intr[nixz]
+   if vintr<1 then vintr=1 end
+   if data[di]==c_stone then
+    yn=yn*vintr -- vertical intrusion
+    for li=1, layers_no do
+     if yn > layers[li].min then
+      data[di]=layers[li].ctx
+      break
+     end
+    end
+   end
+  end
+  nixz= nixz+1
+ end end
+
+ vm:set_data(data)
+ vm:set_lighting({day=15,night=2})
+ minetest.generate_ores(vm)
+ vm:write_to_map(data)
+ minetest.log("action", "rocks/layer/ "..math.ceil((os.clock() - t1) * 1000).." ms ")
+end)
 
 
 -- ~ Tomas Brod

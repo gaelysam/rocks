@@ -15,7 +15,7 @@ minetest.register_node( "rocks:pegmatite", {
 
 -- pegmatites are only 1 kind
 rocks.register_vein("rocks:pegmatite",{
-  wherein={ "rocks:granite", "default:stone" },
+  wherein={ "rocks:granite" },
   miny=-160, maxy=20,
   radius={ average=18, amplitude=0.3, frequency=16 },
   density=80, rarity=CommonRarity,
