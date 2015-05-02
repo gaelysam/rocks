@@ -13,3 +13,5 @@ rocks_Schist.png
 rocks_Slate.png
 rocks_Skarn.png
 rocks_laterite.png
+rocks_claystone.png
+rocks_conglomerate.png
