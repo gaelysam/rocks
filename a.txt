@@ -21,7 +21,7 @@ This mod nor minetest_game/default do not define meaningful biomes.
 So if you do not want unlimited grassland I suggest installing the 
 [Paramat's biomesdev mod](https://github.com/paramat/biomesdev) and adding 
 "rocks?" to depends.txt file inside the biomesdev folder. This is needed, 
-becouse "rock" overrides the standard biome registration callback to patch 
+becouse "rocks" overrides the standard biome registration callback to patch 
 in it's own sedimentary rocks.
 
 Screenshots
@@ -90,7 +90,7 @@ uhlie: Lignit -> č. Uhlie -> Antracit
 iné: Fosfit, Apatit, Rohovec (hornfels)
 ropa: Ropa
 
-# Chemo-vce
+### Chemo-vce
 
 - Evapority
 
