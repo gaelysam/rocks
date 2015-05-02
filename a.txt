@@ -15,6 +15,7 @@ Features
 
 * git clone git://repo.or.cz/rocks.git ([show](http://repo.or.cz/rocks.git/))
 * (old) Git clone: [https](https://gitorious.org/mt/rocks.git)
+* Forum [post](https://forum.minetest.net/viewtopic.php?f=9&t=11779)
 
 This mod nor minetest_game/default do not define meaningful biomes. 
 So if you do not want unlimited grassland I suggest installing the 
@@ -48,6 +49,8 @@ The sedimentary layer
 Is implemented by modifiing MGv7 biomes to use rocks's sedimentary rocks. 
 This means that you need mapgen v7 enabled. I also suggest enabling caves 
 and dungeons, as they are cool. 
+
+Development notes in [Sed.txt](Sed.txt) file!
 
 Soil is normlly 50-70 cm deep in real life, so I made soil (dirt) only 1 
 block thick. Under this thin layer of dirt an sedimentary layer is located. 
