@@ -147,7 +147,7 @@ minetest.register_on_generated( function( minp, maxp, seed )
  end end
 
  vm:set_data(data)
- vm:set_lighting({day=15,night=2})
+ --DEBUG: vm:set_lighting({day=15,night=2})
  minetest.generate_ores(vm)
  vm:write_to_map(data)
  minetest.log("action", "rocks/layer/ "..math.ceil((os.clock() - t1) * 1000).." ms ")
