@@ -50,24 +50,56 @@ Is implemented by modifiing MGv7 biomes to use rocks's sedimentary rocks.
 This means that you need mapgen v7 enabled. I also suggest enabling caves 
 and dungeons, as they are cool. 
 
-Development notes in [Sed.txt](Sed.txt) file!
-
 Soil is normlly 50-70 cm deep in real life, so I made soil (dirt) only 1 
 block thick. Under this thin layer of dirt an sedimentary layer is located. 
 In RL, there is clay and other stuff.
 
-Currently 2 sedimentary formations exists:
+typy = časticovce(45%), Bio-vce(30%),  Chemo-vce(18%), Vulkano-vce(7%) (order?)
 
-### Coal
+| X      | N4<0.7 | N4>0.7 |
+| N1<0.4 |   čast |   chem |
+| N1>0.4 |   bio  |   vulk |
 
-Large panes of coal spawn directly under grass. But be warned, they are 
-really large and not-so-common. Best strategy is to follow rivers (MGv7 
-ridges) or randomly walk around and dig 2 block hole to see if coal is 
-there.
+Noise1( 70)= typ1
+Noise4( 70)= typ2
+Noise2(100)= veľkosť častíc, BioTyp
+Noise3(220)= miera spevnenia, kvalita
 
-### Clay
+2D: fast, acceptable imho <-*
+3D: nice
 
-Spawn simillary to coal, but not as large.
+### Časticovce
+
+(Noise3: nespevnené -> spevnené)
+(Noise2: top-hrubé bot-jemné)
+
+štrk gravel(20%) -> zlepenec conglomerate
+piesok sand(10%) -> pieskovec sandstone
+? -> prachovec
+íl clay -> ílovec claystone(40%) -> bridlica slate(50%)
+
+### Bio-vce
+
+Noise2: (top) ropa(8%), Vápenec(60%), iné(20%), uhlie(12%)
+
+iné: fosfáty, silikáty (Noise4?)
+
+Noise3: low -> high
+
+uhlie: Lignit -> č. Uhlie -> Antracit
+iné: Fosfit, Apatit, Rohovec (hornfels)
+ropa: Ropa
+
+# Chemo-vce
+
+- Evapority
+
+
+### dont forget
+
+- íl [ílovec + voda]
+Vulkano: (prach?) ->biome only?
+ (-> grafit)
 
 The Igenous layer
 --------------
