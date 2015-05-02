@@ -178,7 +178,7 @@ rocks.register_sedimentary=reg
  --reg("rocks:limestone",    { spread=64, height=32, treshold=0.35 })
  --reg("rocks:breccia",  { spread=64, height=32, treshold=0.6 })
  --reg("rocks:conglomerate", { spread=64, height=32, treshold=0.6 })
- reg("default:stone_with_coal", { spread=64, height=14, treshold=0.58 })
- reg("default:clay",{ spread=48, height=14, treshold=0.55 })
+ --reg("default:stone_with_coal", { spread=64, height=14, treshold=0.58 })
+ --reg("default:clay",{ spread=48, height=14, treshold=0.55 })
 
 -- ~ Tomas Brod
