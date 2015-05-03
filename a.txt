@@ -75,7 +75,7 @@ Noise3(220)= miera spevnenia, kvalita
 
 štrk gravel(20%) -> zlepenec conglomerate
 piesok sand(10%) -> pieskovec sandstone
-? -> prachovec
+mudstone
 íl clay -> ílovec claystone(40%) -> bridlica slate(50%)
 
 ### Bio-vce
