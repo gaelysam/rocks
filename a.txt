@@ -54,52 +54,59 @@ Soil is normlly 50-70 cm deep in real life, so I made soil (dirt) only 1
 block thick. Under this thin layer of dirt an sedimentary layer is located. 
 In RL, there is clay and other stuff.
 
-typy = časticovce(45%), Bio-vce(30%),  Chemo-vce(18%), Vulkano-vce(7%) (order?)
+There are various types of sedimentary rock. They are generated according 
+to 2D noises described below.
 
-| X      | N4<0.7 | N4>0.7 |
-| N1<0.4 |   čast |   chem |
-| N1>0.4 |   bio  |   vulk |
+types = Clastic, Biochemical,  Chemical, Vulcano/Other
 
-Noise1( 70)= typ1
-Noise4( 70)= typ2
-Noise2(100)= veľkosť častíc, BioTyp
-Noise3(220)= miera spevnenia, kvalita
+| X      | tp2<0.76     | tp2>0.7 |
+|--------|--------------|--------|
+| tp1<0.2 |   Clastic    |  Chemical |
+| tp1>0.2 | BioChemical  |  Vu/Ot |
 
-2D: fast, acceptable imho <-*
-3D: nice
+- Noise_tp1( 50)= type1
+- Noise_tp2( 70)= type2
+- Noise_vc(100)= particle size
+- Noise_sp(220)= pressue/ hardness
 
-### Časticovce
+I. 2D: fast, acceptable imho <-(used)
+II. 3D: nice
 
-(Noise3: nespevnené -> spevnené)
-(Noise2: top-hrubé bot-jemné)
+### Clastic sediments
 
-štrk gravel(20%) -> zlepenec conglomerate
-piesok sand(10%) -> pieskovec sandstone
-mudstone
-íl clay -> ílovec claystone(40%) -> bridlica slate(50%)
+Made from large or small particles. Either loose or bound into stones.
 
-### Bio-vce
+(particle size: top-large botom-small)
 
-Noise2: (top) ropa(8%), Vápenec(60%), iné(20%), uhlie(12%)
+(hargness: loose -> solid)
 
-iné: fosfáty, silikáty (Noise4?)
+1. gravel -> conglomerate
+2. sand -> sandstone
+3. mudstone
+4. clay -> claystone -> slate
 
-Noise3: low -> high
+### BioChemical sediments
 
-uhlie: Lignit -> č. Uhlie -> Antracit
-iné: Fosfit, Apatit, Rohovec (hornfels)
-ropa: Ropa
+Made from acient plants and creatures that died long ago and turned into rock.
 
-### Chemo-vce
+Noise_vs: kind of sediment: (top) oil, Limestone, other, carbon-based
 
-- Evapority
+Noise_sp: low quality -> high quality
 
+1. oil: ?
+2. Limestone
+3. other: fosfates, silicates, hornfels (unimp)
+4. carbon-based: Lignite -> Coal -> Anthracite
 
-### dont forget
+### Chemical sediments
 
-- íl [ílovec + voda]
-Vulkano: (prach?) ->biome only?
- (-> grafit)
+Created by chemical or physics/chemical reactions.
+
+- Evaporites (unimp)
+
+### Vulanic and extraterrestrial sediments
+
+???
 
 The Igenous layer
 --------------
