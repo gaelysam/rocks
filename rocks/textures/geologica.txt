@@ -15,3 +15,5 @@ rocks_Skarn.png
 rocks_laterite.png
 rocks_claystone.png
 rocks_conglomerate.png
+rocks_anthracite.png
+rocks_lignite.png
