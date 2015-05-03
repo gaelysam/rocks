@@ -41,11 +41,11 @@ rocksl.gensed = function (minp, maxp, seed)
  local c_dwg= c_stone
  --DEBUG: c_dwg= minetest.get_content_id("default:dirt_with_grass")
 
- local n_tp1= minetest.get_perlin_map(np_typ1, pmapsize) : get2dMap_flat(pmapminpxz)
- local n_tp2= minetest.get_perlin_map(np_typ2, pmapsize) : get2dMap_flat(pmapminpxz)
- local n_vc= minetest.get_perlin_map(np_vc, pmapsize) : get2dMap_flat(pmapminpxz)
- local n_sp= minetest.get_perlin_map(np_sp, pmapsize) : get2dMap_flat(pmapminpxz)
- 
+ local n_tp1
+ local n_tp2
+ local n_vc
+ local n_sp
+
  local layers = {
   lava={ mod="default" },
   stone={ mod="default" },
@@ -64,7 +64,7 @@ rocksl.gensed = function (minp, maxp, seed)
   anthracite={ mod="rocks" },
  }
  for k,v in pairs(layers) do
-  v.ctx=minetest.get_content_id(v.mod..":"..k)
+  v.ctx=v.ctx or minetest.get_content_id(v.mod..":"..k)
   if stats and (stats[k]==nil) then stats[k]=0 end
  end
  
@@ -72,6 +72,21 @@ rocksl.gensed = function (minp, maxp, seed)
  for z=minp.z, maxp.z do for x=minp.x, maxp.x do
   -- loop
   local li
+  local generated
+
+  for y=minp.y, maxp.y do
+   local di=area:index(x,y,z)
+   if ((data[di]==c_stone)or(data[di]==c_dwg)) and (not generated) then
+    generated=true
+    if not n_tp1 then
+     n_tp1= minetest.get_perlin_map(np_typ1, pmapsize) : get2dMap_flat(pmapminpxz)
+     n_tp2= minetest.get_perlin_map(np_typ2, pmapsize) : get2dMap_flat(pmapminpxz)
+     n_vc= minetest.get_perlin_map(np_vc, pmapsize) : get2dMap_flat(pmapminpxz)
+     n_sp= minetest.get_perlin_map(np_sp, pmapsize) : get2dMap_flat(pmapminpxz)
+    end
+
+  -- BEGIN geome resolution
+  
   local vcva= math.abs(n_vc[nixz])
   local vcv= n_vc[nixz]
   local spv= n_sp[nixz]
@@ -116,19 +131,24 @@ rocksl.gensed = function (minp, maxp, seed)
   end
   if not li then li="dirt" end
 
-  for y=minp.y, maxp.y do
-   local di=area:index(x,y,z)
-   if ((data[di]==c_stone) or (data[di]==c_dwg)) and li then
+  -- END geome resolution
+
+   end
+   if ((data[di]==c_stone)or(data[di]==c_dwg)) and li then
     data[di]=layers[li].ctx
     if stats then stats.total=stats.total+1 stats[li]=stats[li]+1 end
    end
   end
   nixz= nixz+1
  end end
- vm:set_data(data)
+ if n_tp1 then
+  vm:set_data(data)
+  vm:write_to_map(data)
+  if stats then for k,v in pairs(stats) do  print("stat: "..k..": "..((v/stats.total)*100).."%") end end
+ else
+  print("no sed layer y="..minp.y)
+ end
  minetest.log("action", "rocks/gensed/ "..math.ceil((os.clock() - t1) * 1000).." ms ")
- vm:write_to_map(data)
- if stats then for k,v in pairs(stats) do  print("stat: "..k..": "..((v/stats.total)*100).."%") end end
 end
 
 minetest.register_node( "rocks:slate", {
