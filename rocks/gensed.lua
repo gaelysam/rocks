@@ -81,10 +81,10 @@ rocksl.gensed = function (minp, maxp, seed)
 
   if tp==1 then
    -- particulates
-   if vcva>0.44 then
+   if vcva>0.453 then
     -- clay-(0,stone,slate)
     if spv>0.23 then li="slate"
-    elseif spv>-0.21 then li="claystone"
+    elseif spv>-0.2 then li="claystone"
     else li="clay" end
    elseif vcva>0.4 then
     li="mudstone"
@@ -103,7 +103,7 @@ rocksl.gensed = function (minp, maxp, seed)
     li="stone"
    elseif vcv>-0.12 then
     li="limestone"
-   elseif vcv>-0.42 then
+   elseif vcv>-0.44 then
     --ine
     li="stone"
    else
