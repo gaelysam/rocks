@@ -25,6 +25,19 @@ local np_sp = {
  seed = -1284,
 }
 
+local stats={
+  dirt=0,
+  gravel=0,
+  sand=0,
+  sandstone=0,
+  clay=0,
+  claystone=0,
+  slate=0,
+  conglomerate=0,
+  mudstone=0,
+  total=0
+}
+
 rocksl.gensed = function (minp, maxp, seed)
  local t1 = os.clock()
  local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
@@ -52,6 +65,7 @@ rocksl.gensed = function (minp, maxp, seed)
   claystone={ mod="rocks" },
   slate={ mod="rocks" },
   conglomerate={ mod="rocks" },
+  mudstone={ mod="rocks" },
  }
  for k,v in pairs(layers) do
   v.ctx=minetest.get_content_id(v.mod..":"..k)
@@ -70,17 +84,20 @@ rocksl.gensed = function (minp, maxp, seed)
 
   if tp==1 then
    -- particulates
-   if vcv>0.4 then
+   if vcv>0.46 then
     -- clay-(0,stone,slate)
     if spv>0.28 then li="slate"
     elseif spv>-0.31 then li="claystone"
     else li="clay" end
+   elseif spv>0.4 then
+    li="mudstone"
    elseif vcv>0.2 then
     -- sand-(0,stone)
     if spv>-0.3 then li="sandstone" else li="sand" end
    else
     -- gravel/conglomerate
     if spv>-0.34 then li="conglomerate" else li="gravel" end
+    -- breccia?
    end
   end
 
@@ -88,6 +105,8 @@ rocksl.gensed = function (minp, maxp, seed)
    local di=area:index(x,y,z)
    if ((data[di]==c_stone) or (data[di]==c_dwg)) and li then
     data[di]=layers[li].ctx
+    --stats.total=stats.total+1
+    --stats[li]=stats[li]+1
    end
   end
   nixz= nixz+1
@@ -95,6 +114,7 @@ rocksl.gensed = function (minp, maxp, seed)
  vm:set_data(data)
  minetest.log("action", "rocks/gensed/ "..math.ceil((os.clock() - t1) * 1000).." ms ")
  vm:write_to_map(data)
+ --for k,v in pairs(stats) do  print("stat: "..k..": "..((v/stats.total)*100).."%") end
 end
 
 minetest.register_node( "rocks:slate", {
