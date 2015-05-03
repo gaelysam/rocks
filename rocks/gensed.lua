@@ -47,6 +47,7 @@ rocksl.gensed = function (minp, maxp, seed)
  local n_sp= minetest.get_perlin_map(np_sp, pmapsize) : get2dMap_flat(pmapminpxz)
  
  local layers = {
+  lava={ mod="default" },
   stone={ mod="default" },
   dirt={ mod="default" },
   gravel={ mod="default" },
@@ -98,10 +99,10 @@ rocksl.gensed = function (minp, maxp, seed)
    end
   elseif tp==2 then
    -- biosediments
-   if vcv>0.81 then
+   if vcv>0.72 then
     --ropa
-    li="stone"
-   elseif vcv>-0.12 then
+    li="lava"
+   elseif vcv>-0.24 then
     li="limestone"
    elseif vcv>-0.44 then
     --ine
