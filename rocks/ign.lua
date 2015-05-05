@@ -77,18 +77,6 @@ end
 
 rocks.register_vein=regv
 
-rocks.register_vein("default:nyancat",{
-  wherein={"rocks:granite", "air"},
-  miny=-160, maxy=20,
-  radius={ average=10, amplitude=0.1, frequency=8 },
-  density=100,
-  rarity=70, -- this^3*mapblock_volume veins per mapblock
-  ores={
-    { ore="default:sand", percent=30 },
-    { ore="default:dirt", percent=30 },
-  }
-  })
-
 local np_layer = {
  offset = 0, octaves = 3, persist = 0.46,
  scale = 30,

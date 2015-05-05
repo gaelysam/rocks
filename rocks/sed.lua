@@ -92,7 +92,7 @@ do
    def.depth_filler=11
    def.node_stone="rocks:granite"
    if (def.humidity_point>80) and (def.heat_point>80) then
-    def.node_filler="rocks:laterite"
+    --def.node_filler="rocks:laterite"
    end
   elseif btype=="highland" then
    def.node_filler="rocks:limestone"
