@@ -30,7 +30,14 @@ dofile(modpath.."/ign.lua")
 dofile(modpath.."/skarn.lua")
 dofile(modpath.."/pegmatite.lua")
 dofile(modpath.."/gensed.lua")
-minetest.register_on_generated(rocksl.gensed)
+
+minetest.register_on_generated(function(minp,maxp,seed)
+ local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
+ local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
+ rocksl.gensed(minp,maxp,seed,vm,area)
+ --rocksl.genign
+ vm:write_to_map(data)
+end)
 
 minetest.register_on_mapgen_init(function(mapgen_params)
  -- todo: disable caves and ores

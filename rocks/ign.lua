@@ -91,10 +91,9 @@ local np_intr = {
  seed = 3740,
 }
 
-minetest.register_on_generated( function( minp, maxp, seed )
+--minetest.register_on_generated( function( minp, maxp, seed )
+rocksl.genign=function(minp,maxp,seed, vm, area)
  local t1 = os.clock()
- local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
- local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
  local data = vm:get_data()
 
  local chunksize = maxp.x - minp.x + 1
@@ -137,9 +136,8 @@ minetest.register_on_generated( function( minp, maxp, seed )
  vm:set_data(data)
  --DEBUG: vm:set_lighting({day=15,night=2})
  minetest.generate_ores(vm)
- vm:write_to_map(data)
  minetest.log("action", "rocks/layer/ "..math.ceil((os.clock() - t1) * 1000).." ms ")
-end)
+end
 
 
 -- ~ Tomas Brod

@@ -34,10 +34,8 @@ local np_sp = {
 local stats
 stats={ total=0 }
 
-rocksl.gensed = function (minp, maxp, seed)
+rocksl.gensed = function (minp, maxp, seed, vm, area)
  local t1 = os.clock()
- local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
- local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
  local data = vm:get_data()
 
  local chunksize = maxp.x - minp.x + 1
@@ -160,7 +158,6 @@ rocksl.gensed = function (minp, maxp, seed)
  end end
  if generated then
   vm:set_data(data)
-  vm:write_to_map(data)
   if stats then for k,v in pairs(stats) do  print("stat: "..k..": "..((v/stats.total)*100).."%") end end
  else
   print("no sed layer y="..minp.y)
