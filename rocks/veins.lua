@@ -2,6 +2,18 @@
 
 local pr
 
+local function draw_sphere(data,area,pos,radius,with)
+ local rsq=radius^2
+ radius=radius+2
+ for x=-radius, radius do
+ for y=-radius, radius do
+ for z=-radius, radius do
+  if (x^2)+(y^2)+(z^2)<=rsq then
+   data[area:index(x+pos.x,y+pos.y,z+pos.z)]=with
+  end
+ end end end
+end
+
 rocksl.genvein=function(minp,maxp,seed,vm,area)
  local t1 = os.clock()
  local data = vm:get_data()
@@ -22,6 +34,7 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
  print("maxp="..maxp.x..","..maxp.y..","..maxp.z)
  --local pointA=vector.add(minp,chunksize/2)
  local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
+ draw_sphere(data,area,pointA,5,c_sample)
 
  for vc=1, numveins do
   --local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
@@ -40,6 +53,7 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
    p=vector.round(p)
    local di=area:index(p.x,p.y,p.z)
    data[di]=c_sample
+   --draw_sphere(data,area,p,1,c_sample)
   end
  end
 
