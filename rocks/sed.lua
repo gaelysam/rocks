@@ -36,7 +36,8 @@ do
   { -- default biome, if no biome mod is installed
    name = "rocks:grassland",
    node_top = "air",
-   depth_top = 1,
+   depth_top = 0,
+   depth_filler=0,
    y_min = lowland_min,
    y_max = lowland_max,
    heat_point = 50,
@@ -88,9 +89,9 @@ do
   rocksl.print("register_biome .name="..def.name.." -> btype="..btype)
   -- patch the new biomes with our rocks
   if btype=="lowland" then
-   def.node_filler="rocks:mudstone"
-   def.depth_filler=11
-   def.node_stone="rocks:granite"
+   --def.node_filler="rocks:mudstone"
+   --def.depth_filler=11
+   --def.node_stone="rocks:granite"
    if (def.humidity_point>80) and (def.heat_point>80) then
     --def.node_filler="rocks:laterite"
    end
