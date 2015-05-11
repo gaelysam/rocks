@@ -31,13 +31,15 @@ dofile(modpath.."/skarn.lua")
 dofile(modpath.."/pegmatite.lua")
 dofile(modpath.."/gensed.lua")
 dofile(modpath.."/pipes.lua")
+dofile(modpath.."/veins.lua")
 
 minetest.register_on_generated(function(minp,maxp,seed)
  local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
  local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
  rocksl.gensed(minp,maxp,seed,vm,area)
  --rocksl.genign
- rocksl.genpipe(minp,maxp,seed,vm,area)
+ --rocksl.genpipe(minp,maxp,seed,vm,area)
+ rocksl.genvein(minp,maxp,seed,vm,area)
  vm:write_to_map(data)
 end)
 
