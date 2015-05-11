@@ -1,7 +1,5 @@
 -- experimental fast vein generator
 
-local pr
-
 local function draw_sphere(data,area,pos,radius,with)
  local rsq=radius^2
  radius=radius+2
@@ -32,7 +30,7 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
  local chunksize = chunksizer + 1
  local pmapsize = {x = chunksize, y = chunksize, z = chunksize}
  local minpxz = {x = minp.x, y = minp.z}
- pr=pr or PseudoRandom(seed)
+ local pr=PseudoRandom(seed)
  local c_sample=minetest.get_content_id("default:mese")
  
  print("pr="..pr:next().." seed="..seed)
@@ -43,16 +41,15 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
   local pointB=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointC=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointB2=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
-  local step=1.3/(vector.distance(pointA,pointB)+vector.distance(pointB,pointC))
+  local l1=vector.distance(pointA,pointB)+vector.distance(pointB,pointC)
+  local l2=1/(vector.distance(pointA,pointB2)+vector.distance(pointB2,pointC))
+  local step=1.3/math.max(l1,l2)
   for t=0, 1, step do
-   local p=vector.multiply(pointA,(1-t)^2)
-   p=vector.add(p, vector.multiply(pointB,2*t*(1-t)) )
+   local p
+   p=vector.multiply(pointA,(1-t)^2)
    p=vector.add(p, vector.multiply(pointC,t*t) )
-   local p2=vector.multiply(pointA,(1-t)^2)
-   p2=vector.add(p2, vector.multiply(pointB2,2*t*(1-t)) )
-   p2=vector.add(p2, vector.multiply(pointC,t*t) )
-   p=vector.round(p)
-   p2=vector.round(p2)
+   p=vector.add(p, vector.multiply(pointB,2*t*(1-t)) )
+   local p2=vector.add(p, vector.multiply(pointB2,2*t*(1-t)) )
    line(data,area,p,p2,c_sample)
   end
 
