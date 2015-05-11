@@ -38,7 +38,7 @@ minetest.register_on_generated(function(minp,maxp,seed)
  local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
  rocksl.gensed(minp,maxp,seed,vm,area)
  --rocksl.genign
- --rocksl.genpipe(minp,maxp,seed,vm,area)
+ rocksl.genpipe(minp,maxp,seed,vm,area)
  rocksl.genvein(minp,maxp,seed,vm,area)
  vm:write_to_map(data)
 end)

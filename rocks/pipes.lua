@@ -24,7 +24,7 @@ rocksl.genpipe=function(minp,maxp,seed,vm,area)
  local minpxz = {x = minp.x, y = minp.z}
  pr=pr or PseudoRandom(seed)
  local c_sample=minetest.get_content_id("default:mese")
- local sample_scarcity=8
+ local sample_scarcity=16
  
  local numpipes_raw=(chunksize/sample_scarcity)
  local numpipes = math.floor(numpipes_raw + (pr:next(0,99)/100))
@@ -33,11 +33,11 @@ rocksl.genpipe=function(minp,maxp,seed,vm,area)
  print("minp="..minp.x..","..minp.y..","..minp.z)
  print("maxp="..maxp.x..","..maxp.y..","..maxp.z)
  --local pointA=vector.add(minp,chunksize/2)
- local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
- draw_sphere(data,area,pointA,5,c_sample)
+ --local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
+ --draw_sphere(data,area,pointA,5,c_sample)
 
  for vc=1, numpipes do
-  --local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
+  local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointB=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointC=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   print("pointA="..pointA.x..","..pointA.y..","..pointA.z)
