@@ -1,4 +1,4 @@
--- experimental fast vein generator
+-- experimental fast pipe generator
 
 local pr
 
@@ -14,7 +14,7 @@ local function draw_sphere(data,area,pos,radius,with)
  end end end
 end
 
-rocksl.genvein=function(minp,maxp,seed,vm,area)
+rocksl.genpipe=function(minp,maxp,seed,vm,area)
  local t1 = os.clock()
  local data = vm:get_data()
 
@@ -26,9 +26,9 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
  local c_sample=minetest.get_content_id("default:mese")
  local sample_scarcity=8
  
- local numveins_raw=(chunksize/sample_scarcity)
- local numveins = math.floor(numveins_raw + (pr:next(0,99)/100))
- print("numveins="..numveins.." raw="..numveins_raw)
+ local numpipes_raw=(chunksize/sample_scarcity)
+ local numpipes = math.floor(numpipes_raw + (pr:next(0,99)/100))
+ print("numpipes="..numpipes.." raw="..numpipes_raw)
  print("pr="..pr:next().." seed="..seed)
  print("minp="..minp.x..","..minp.y..","..minp.z)
  print("maxp="..maxp.x..","..maxp.y..","..maxp.z)
@@ -36,7 +36,7 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
  local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
  draw_sphere(data,area,pointA,5,c_sample)
 
- for vc=1, numveins do
+ for vc=1, numpipes do
   --local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointB=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointC=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
@@ -58,5 +58,5 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
  end
 
  vm:set_data(data)
- minetest.log("action", "rocks/genvein/ "..math.ceil((os.clock() - t1) * 1000).." ms ")
+ minetest.log("action", "rocks/genpipe/ "..math.ceil((os.clock() - t1) * 1000).." ms ")
 end
