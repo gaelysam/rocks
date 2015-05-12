@@ -1,20 +1,60 @@
--- experimental fast pipe generator
+-- experimental slow pipe generator
 
-local pr
-
-local function draw_sphere(data,area,pos,radius,with)
+local function brush(data,area,pos,radius,content,ores,pr)
  local rsq=radius^2
+ local orect
+ local oresc
  radius=radius+2
+   for _,ore in pairs(ores) do
+    if pr:next(0,ore.scarcity)==0 then
+     orect=ore.c_ore
+     oresc=ore.density
+    end
+   end
  for x=-radius, radius do
  for y=-radius, radius do
  for z=-radius, radius do
   if (x^2)+(y^2)+(z^2)<=rsq then
-   data[area:index(x+pos.x,y+pos.y,z+pos.z)]=with
+   local di=area:index(x+pos.x,y+pos.y,z+pos.z)
+   if oresc and (pr:next(0,oresc)==0) then 
+    data[di]=orect
+   else
+    data[di]=content
+   end
   end
  end end end
 end
 
-rocksl.genpipe=function(minp,maxp,seed,vm,area)
+-- the public table of registered pipes
+rocks.pipes={}
+local examplepipe={
+ bedrock={ "rocks:limestone" },
+ startrock={ "rocks:limestone" },
+ ymin=-200, ymax=-6,
+ scarcity=80,
+ radius=3,
+ content="default:wood",
+ scatter=
+ {
+  { scarcity=7, density=4, ore="default:mese", cnt=0},
+ },
+}
+table.insert(rocks.pipes,examplepipe)
+--profiling
+table.insert(rocks.pipes,{
+ bedrock={ "rocks:limestone" },
+ startrock={ "rocks:limestone" },
+ ymin=-200, ymax=-6,
+ scarcity=80,
+ radius=3,
+ content="default:dirt",
+ scatter=
+ {
+  { scarcity=5, density=4, ore="default:mese", cnt=0},
+ },
+})
+
+rocksl.genpipe=function(minp,maxp,pr,vm,area,descr)
  local t1 = os.clock()
  local data = vm:get_data()
 
@@ -22,38 +62,32 @@ rocksl.genpipe=function(minp,maxp,seed,vm,area)
  local chunksize = chunksizer + 1
  local pmapsize = {x = chunksize, y = chunksize, z = chunksize}
  local minpxz = {x = minp.x, y = minp.z}
- pr=pr or PseudoRandom(seed)
- local c_sample=minetest.get_content_id("default:mese")
- local sample_scarcity=16
  
- local numpipes_raw=(chunksize/sample_scarcity)
+ local bedrocks={}
+ for _,node in pairs(descr.bedrock) do bedrocks[minetest.get_content_id(node)]=true end
+ local startrocks={}
+ for _,node in pairs(descr.startrock) do startrocks[minetest.get_content_id(node)]=true end
+ local content=minetest.get_content_id(descr.content)
+ for _,des in pairs(descr.scatter) do 
+  des.c_ore=minetest.get_content_id(des.ore)
+ end
+ local orepr=PseudoRandom(pr:next())
+
+ local numpipes_raw=(chunksize/descr.scarcity)
  local numpipes = math.floor(numpipes_raw + (pr:next(0,99)/100))
- print("numpipes="..numpipes.." raw="..numpipes_raw)
- print("pr="..pr:next().." seed="..seed)
- print("minp="..minp.x..","..minp.y..","..minp.z)
- print("maxp="..maxp.x..","..maxp.y..","..maxp.z)
- --local pointA=vector.add(minp,chunksize/2)
- --local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
- --draw_sphere(data,area,pointA,5,c_sample)
 
  for vc=1, numpipes do
   local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
+  if (#startrocks>0)and(startrocks[data[area:indexp(pointA)]]==nil) then break end
   local pointB=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointC=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
-  print("pointA="..pointA.x..","..pointA.y..","..pointA.z)
-  print("pointB="..pointB.x..","..pointB.y..","..pointB.z)
-  print("pointC="..pointC.x..","..pointC.y..","..pointC.z)
-  local step=1.41/(vector.distance(pointA,pointB)+vector.distance(pointB,pointC))
-  print("step="..step)
+  local step=(1.8*descr.radius)/(vector.distance(pointA,pointB)+vector.distance(pointB,pointC))
   for t=0, 1, step do
    local p=vector.multiply(pointA,(1-t)^2)
    p=vector.add(p, vector.multiply(pointB,2*t*(1-t)) )
    p=vector.add(p, vector.multiply(pointC,t*t) )
-   --local p=vector.add(vector.multiply(pointA,(1-t)), vector.multiply(pointB,t) )
    p=vector.round(p)
-   local di=area:index(p.x,p.y,p.z)
-   data[di]=c_sample
-   --draw_sphere(data,area,p,1,c_sample)
+   brush(data,area,p,descr.radius,content,descr.scatter,orepr)
   end
  end
 

@@ -22,7 +22,7 @@ local function line(data,area,A,B,with)
  end
 end
 
-rocksl.genvein=function(minp,maxp,seed,vm,area)
+rocksl.genvein=function(minp,maxp,pr,vm,area)
  local t1 = os.clock()
  local data = vm:get_data()
 
@@ -30,12 +30,8 @@ rocksl.genvein=function(minp,maxp,seed,vm,area)
  local chunksize = chunksizer + 1
  local pmapsize = {x = chunksize, y = chunksize, z = chunksize}
  local minpxz = {x = minp.x, y = minp.z}
- local pr=PseudoRandom(seed)
  local c_sample=minetest.get_content_id("default:mese")
  
- print("pr="..pr:next().." seed="..seed)
- print("minp="..minp.x..","..minp.y..","..minp.z)
- print("maxp="..maxp.x..","..maxp.y..","..maxp.z)
 
   local pointA=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
   local pointB=vector.new(pr:next(0,chunksizer)+minp.x,pr:next(0,chunksizer)+minp.y,pr:next(0,chunksizer)+minp.z)
