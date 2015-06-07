@@ -1,5 +1,12 @@
 -- experimental fast vein generator
 
+rocks.veins={}
+
+table.insert(rocks.veins,{
+ scarcity=80,
+ 
+})
+
 
 rocksl.genvein=function(minp,maxp,pr,vm,area)
  local t1 = os.clock()

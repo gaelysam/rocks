@@ -25,23 +25,16 @@ minetest.clear_registered_ores()
 
 local modpath=minetest.get_modpath(minetest.get_current_modname())
 
-dofile(modpath.."/sed.lua")
-dofile(modpath.."/ign.lua")
-dofile(modpath.."/skarn.lua")
-dofile(modpath.."/pegmatite.lua")
-dofile(modpath.."/gensed.lua")
-dofile(modpath.."/pipes.lua")
-dofile(modpath.."/veins.lua")
+--dofile(modpath.."/pipes.lua")
+--dofile(modpath.."/veins.lua")
+dofile(modpath.."/layers.lua")
 
 minetest.register_on_generated(function(minp,maxp,seed)
  local vm, emin, emax = minetest.get_mapgen_object("voxelmanip")
  local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
  local pr=PseudoRandom(seed)
- rocksl.gensed(minp,maxp,seed,vm,area)
- --rocksl.genign
- rocksl.genvein(minp,maxp,pr,vm,area)
- for _,pipe in pairs(rocks.pipes) do rocksl.genpipe(minp,maxp,pr,vm,area,pipe) end
- vm:write_to_map(data)
+ rocksl.genlayers(minp,maxp,seed,vm,area)
+ vm:write_to_map()
 end)
 
 minetest.register_on_mapgen_init(function(mapgen_params)
